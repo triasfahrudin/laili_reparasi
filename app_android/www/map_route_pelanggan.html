@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/map_route_penjual_main.less.css" class="main-less">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <script src="intelxdk.js"></script>
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script src="xhr.js"></script>
+    <script src="xdk/init-dev.js"></script>
+    <script type="application/javascript" src="lib/jquery.min.js"></script>
+    <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+    <!-- <script type="application/javascript" src="js/route_user_scripts.js"></script> -->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDy5ePPPOnm2Ix6_MU7SGsUX4QzrHfH1t4&amp;language=id"></script>
+    <style>
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto', 'sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+    </style>
+    <script>
+        var map,      
+            lat_0, lng_0, 
+            lat_1, lng_1 
+            directionsDisplay = new google.maps.DirectionsRenderer(),
+            directionsService = new google.maps.DirectionsService();
+
+        function initializeMapAndCalculateRoute() {
+
+
+            currentPosition = new google.maps.LatLng(lat_0, lng_0);
+
+            console.log('init:' + lat_0 + '-' + lng_0);
+
+            map = new google.maps.Map(document.getElementById('map_canvas'), {
+                zoom: 15,
+                center: currentPosition,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                gestureHandling: 'greedy'
+            });
+
+            directionsDisplay.setMap(map);
+
+            var currentPositionMarker = new google.maps.Marker({
+                position: currentPosition,
+                map: map,
+                title: "Current position"
+            });
+
+            // current position marker info
+            /*
+            var infowindow = new google.maps.InfoWindow();
+            google.maps.event.addListener(currentPositionMarker, 'click', function() {
+                infowindow.setContent("Current position: latitude: " + lat +" longitude: " + lon);
+                infowindow.open(map, currentPositionMarker);
+            });
+            */
+
+            // calculate Route
+            calculateRoute();
+            
+        }
+
+//        document.getElementById('mode').addEventListener('change', function() {
+//            calculateRoute(position.coords.latitude, position.coords.longitude);
+//        });
+        
+//        $('#mode').on('change', function() {
+//          calculateRoute(position.coords.latitude, position.coords.longitude);
+//        });
+        
+        function calculateRoute() {
+            
+            var selectedMode = document.getElementById('mode').value;
+            
+            var currentPosition = new google.maps.LatLng(lat_0, lng_0);
+            var targetDestination = new google.maps.LatLng(lat_1,lng_1);
+            
+
+            if (currentPosition != '' && targetDestination != '') {
+
+                var request = {
+                    origin: currentPosition,
+                    destination: targetDestination,
+                    travelMode: google.maps.DirectionsTravelMode[selectedMode]
+                };
+
+                //directionsService = new google.maps.DirectionsService();
+                //directionsDisplay = new google.maps.DirectionsRenderer();
+
+                console.log('calculate:' + lat_0 + '-' + lng_0 + '::' + lat_1 + '-' + lng_1);
+
+
+                directionsService.route(request, function (response, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setPanel(document.getElementById("directions"));
+                        directionsDisplay.setDirections(response);
+
+                        /*
+                            var myRoute = response.routes[0].legs[0];
+                            for (var i = 0; i < myRoute.steps.length; i++) {
+                                alert(myRoute.steps[i].instructions);
+                            }
+                        */
+
+                        
+                        $("#results").show();
+                    } else {
+                        $("#results").hide();
+                    }
+                });
+            } else {
+                $("#results").hide();
+            }
+        }
+
+//        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+//            var selectedMode = document.getElementById('mode').value;
+//            directionsService.route({
+//                origin: {
+//                    lat: currentLatitude,
+//                    lng: currentLongitude
+//                }, // Haight.
+//                destination: {
+//                    lat: destinationLatitude,
+//                    lng: destinationLongitude
+//                }, // Ocean Beach.
+//                // Note that Javascript allows us to access the constant
+//                // using square brackets and a string value as its
+//                // "property."
+//                travelMode: google.maps.TravelMode[selectedMode]
+//            }, function (response, status) {
+//                if (status == 'OK') {
+//                    directionsDisplay.setDirections(response);
+//                } else {
+//                    window.alert('Directions request failed due to ' + status);
+//                }
+//            });
+//        }
+
+        document.addEventListener("deviceready", function () { 
+            navigator.geolocation.getCurrentPosition(function (position) {
+
+                    position: new google.maps.LatLng()
+
+                    var lat =  parseFloat(position.coords.latitude);
+                    var lng = parseFloat(position.coords.longitude);
+
+                    $.post(rootWebService + "/map_route_pelanggan", {
+                        pelanggan_id : localStorage.getItem('route_pelanggan_id'),
+                        penjual_id : localStorage.getItem('user_id')
+                    }, 'json').done(function(data) {
+                            // lat_0 = data.lat_0;
+                            // lng_0 = data.lng_0;
+
+                            lat_0 = lat;
+                            lng_0 = lng;
+
+                            lat_1 = data.lat_1;
+                            lng_1 = data.lng_1;
+                            
+                            initializeMapAndCalculateRoute();
+                            //$.mobile.changePage($(document.location.href = "dashboard.html"), 'slide');
+                            document.getElementById('mode').addEventListener('change', function() {
+                                 calculateRoute();
+                            }); 
+
+                    });
+
+
+                }, function (error) {
+                    if (error.code == 1) {
+                        alert("App doesn't have permission to use GPS");
+                    } else if (error.code == 2) {
+                        alert("No GPS device found");
+                    } else if (error.code == 3) {
+                        alert("Its taking too long find user location");
+                    } else {
+                        alert("An unknown error occured");
+                    }
+                }, {
+                    maximumAge: 3000,
+                    timeout: 5000,
+                    enableHighAccuracy: true
+                });
+        }, false);
+    </script>
+</head>
+
+<body>
+    <div class="upage" id="mainpage">
+
+        <div class="upage-outer">
+            <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                <h2></h2>
+                <div class="widget-container wrapping-col single-centered"></div>
+                <div class="widget-container content-area horiz-area wrapping-col left">
+                    <button onclick="window.history.back();" class="btn widget uib_w_2 d-margins btn-xs btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="route_back_btn"><i class="glyphicon glyphicon-chevron-left" data-position="icon only"></i>
+                    </button>
+                </div>
+                <div class="widget-container content-area horiz-area wrapping-col right"></div>
+            </div>
+            <div class="upage-content ac0 content-area vertical-col left" id="page_63_23"></div>
+        </div>
+        <div id="floating-panel">
+            <b>Mode of Travel: </b>
+            <select id="mode">
+                <option value="DRIVING">Berkendara</option>
+                <option value="WALKING">Berjalan</option>
+<!--                <option value="BICYCLING">Bersepeda</option>-->
+<!--                <option value="TRANSIT">Transit</option>-->
+            </select>
+        </div>
+        <div id="map_canvas" style="height:350px;"></div>
+        <div id="result">
+            <div id="directions"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/lupa_pass_main.less.css" class="main-less">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <script src="intelxdk.js"></script>
+    <script src="cordova.js"></script>
+
+    <script src="js/app.js"></script>
+
+    <script src="xhr.js"></script>
+    <script src="xdk/init-dev.js"></script>
+    <script type="application/javascript" src="lib/jquery.min.js"></script>
+    <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+    <script type="application/javascript" src="js/lupa_pass_user_scripts.js"></script>
+  </head>
+
+  <body>
+    <div class="upage" id="mainpage">
+
+      <div class="upage-outer">
+        <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+          <h2>Reset Password</h2>
+          <div class="widget-container wrapping-col single-centered"></div>
+          <div class="widget-container content-area horiz-area wrapping-col left">
+            <button class="btn widget uib_w_4 d-margins btn-xs btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
+            </button>
+          </div>
+          <div class="widget-container content-area horiz-area wrapping-col right"></div>
+        </div>
+        <div class="upage-content ac0 content-area vertical-col left" id="page_58_48">
+
+          <div class="alert alert-danger" style="display: none;" id="alert_div">
+            <strong>Peringatan!</strong> 
+            <label id="danger_label">{danger-text}</label>
+          </div>
+
+          <div class="alert alert-success" style="display: none;" id="success_div">
+            <strong>Berhasil!</strong> 
+            <br>Reset Password Berhasil. Silahkan cek email anda untuk mendapatkan reset number.
+            <br>Klik di <a href="index.html">Sini</a> untuk ke halaman login
+          </div>
+
+          <div class="table-thing widget uib_w_2 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1" style="padding: 10px">
+            <label class="narrow-control label-top-left" for="email">Email</label>
+            <input class="wide-control form-control default" type="text" id="email" required="required">
+          </div>
+          <button class="btn widget uib_w_3 d-margins btn btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="btnResetPass">
+            <img src="images/loading.gif" width="50px" id="loading_img" style="display: none">Reset Password<i class="glyphicon glyphicon-chevron-right button-icon-right" data-position="right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      function isEmpty(str) {
+        return (!str || 0 === str.length);
+      }
+
+      function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+      }
+
+
+      $(document).on("click", "#btnResetPass", function(evt)
+      {
+          /* your code goes here */ 
+          // window.location = "lupa_pass.html";
+          // return false;
+          var txtEmail = $('#email').val();
+          var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+
+          $('#alert_div').hide();
+          $('#loading_img').hide();
+
+          if(!pattern.test(txtEmail) || isEmpty(txtEmail)){
+            
+            $('#danger_label').html('Email tidak valid')
+            $('#alert_div').show();
+            
+          }else{
+            
+            $('#loading_img').show();
+
+            $.post(rootWebService + "/reset_password", {
+                email     : txtEmail   
+            }, 'json')
+            .done(function (data) {
+
+                $('#loading_img').show();
+
+                if (data.status === 'email_ngga_terdaftar') {
+                  
+                    $('#danger_label').html('email tidak terdaftar!')
+                    $('#alert_div').show();
+                    $('#loading_img').hide();
+
+                } else if(data.status === 'berhasil') {
+
+                    // $('#success_div').show();
+                    // $('#loading_img').hide();
+                    localStorage.setItem('reset_email_request', txtEmail);
+                    window.location = "reset_password.html";
+                }
+
+            }); 
+          }          
+
+      });
+    </script>
+  </body>
+
+</html>

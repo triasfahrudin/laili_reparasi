@@ -1,0 +1,6 @@
+download :
+smartgit
+
+bikin akun:
+https://github.com/
+https://build.phonegap.com/

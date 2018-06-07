@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/profile_pelanggan_main.less.css" class="main-less">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <script src="intelxdk.js"></script>
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="xhr.js"></script>
+    <script src="xdk/init-dev.js"></script>
+    <script type="application/javascript" src="lib/jquery.min.js"></script>
+    <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDy5ePPPOnm2Ix6_MU7SGsUX4QzrHfH1t4"></script>
+
+    <script type="text/javascript">
+        var map = null;
+        var marker = null;
+
+        var infowindow = new google.maps.InfoWindow({
+            size: new google.maps.Size(150, 50)
+        });
+
+        function createMarker(map, infowindow, latlng, name, html) {
+            var contentString = html;
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                zIndex: Math.round(latlng.lat() * -100000) << 5
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+            });
+
+            google.maps.event.trigger(marker, 'click');
+            return marker;
+        }
+
+        function initialize() {
+            var user_latitude = localStorage.getItem('user_latitude');
+
+            if (user_latitude == 0) {
+
+
+                navigator.geolocation.getCurrentPosition(function (position) {
+
+                    //position: new google.maps.LatLng()
+
+                    //calculateRoute(position.coords.latitude, position.coords.longitude);
+                    // initializeMapAndCalculateRoute(position.coords.latitude, position.coords.longitude);
+                 
+                    // document.getElementById('mode').addEventListener('change', function() {
+                    //     calculateRoute(position.coords.latitude, position.coords.longitude);
+                    // });
+
+                    var myLatLng = {
+                        lat: parseFloat(position.coords.latitude),
+                        lng: parseFloat(position.coords.longitude)
+                    };
+
+                    var myOptions = {
+                        zoom: 15,
+                        center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                        mapTypeControl: true,
+                        mapTypeControlOptions: {
+                            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                        },
+                        navigationControl: true,
+                        mapTypeId: google.maps.MapTypeId.SATELLITE,
+                        gestureHandling: 'greedy'
+                    }
+
+                    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+                    var marker = new google.maps.Marker({
+                        position: myLatLng,
+                        map: map,
+                        title: 'Hello World!'
+                    });
+
+                    google.maps.event.addListener(map, 'click', function() {
+                        infowindow.close();
+                    });
+
+                    google.maps.event.addListener(map, 'click', function(event) {
+                        //call function to create marker
+                        if (marker) {
+                            marker.setMap(null);
+                            marker = null;
+                        }
+
+                        marker = createMarker(map, infowindow, event.latLng, "name", "<b>Location</b><br>" + event.latLng);
+
+                        $.post(rootWebService + "/update_lokasi", {
+                            user_id: localStorage.getItem('user_id'),
+                            jenis : 'pelanggan',
+                            latitude: event.latLng.lat(),
+                            longitude: event.latLng.lng()
+                        });
+
+                    });
+
+                }, function (error) {
+                    if (error.code == 1) {
+                        alert("App doesn't have permission to use GPS");
+                    } else if (error.code == 2) {
+                        alert("No GPS device found");
+                    } else if (error.code == 3) {
+                        alert("Its taking too long find user location");
+                    } else {
+                        alert("An unknown error occured");
+                    }
+                }, {
+                    maximumAge: 3000,
+                    timeout: 5000,
+                    enableHighAccuracy: true
+                });
+
+                
+
+            } else {
+
+                var user_latitude = localStorage.getItem('user_latitude');
+                var user_longitude = localStorage.getItem('user_longitude');
+
+                console.log('user_latitude' + user_latitude);
+                console.log('user_longitude' + user_longitude);
+
+                var myLatLng = {
+                    lat: parseFloat(user_latitude),
+                    lng: parseFloat(user_longitude)
+                };
+                // create the map
+                var myOptions = {
+                    zoom: 15,
+                    center: new google.maps.LatLng(user_latitude, user_longitude),
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                    },
+                    navigationControl: true,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE,
+                    gestureHandling: 'greedy'
+                }
+
+                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: 'Hello World!'
+                });
+
+
+                google.maps.event.addListener(map, 'click', function() {
+                    infowindow.close();
+                });
+
+                google.maps.event.addListener(map, 'click', function(event) {
+                    //call function to create marker
+                    if (marker) {
+                        marker.setMap(null);
+                        marker = null;
+                    }
+
+                    marker = createMarker(map, infowindow, event.latLng, "name", "<b>Location</b><br>" + event.latLng);
+
+                    $.post(rootWebService + "/update_lokasi", {
+                        user_id: localStorage.getItem('user_id'),
+                        jenis : 'penjual',
+                        latitude: event.latLng.lat(),
+                        longitude: event.latLng.lng()
+                    });
+
+                })
+
+            }
+        }
+
+        document.addEventListener("deviceready", function() {
+
+            $.post(rootWebService + "/profile_penjual", {
+                penjual_id: localStorage.getItem('user_id')
+            }, 'json').done(function(data) {
+                $('#email').val(data.email);
+                $('#nama').val(data.nama);
+                $('#alamat').val(data.alamat);
+                $('#telp').val(data.telp);
+
+                localStorage.setItem('user_latitude', data.latitude);
+                localStorage.setItem('user_longitude', data.longitude);
+
+                // console.log('data.latitude' + data.latitude);
+                // console.log('data.longitude' + data.longitude);
+
+                initialize();
+
+
+            });
+
+
+        }, false);
+    </script>
+
+    <style type="text/css">
+      #pac-input {
+         background-color: #fff;
+         font-family: Roboto;
+         font-size: 15px;
+         font-weight: 300;
+         margin-left: 12px;
+         padding: 0 11px 0 13px;
+         text-overflow: ellipsis;
+         width: 400px;
+       }
+       #pac-input:focus {
+       border-color: #4d90fe;
+       }
+    </style>
+</head>
+
+<body>
+    <div class="upage" id="mainpage">
+        <div class="upage-outer">
+            <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                <h2>PROFILE</h2>
+                <div class="widget-container wrapping-col single-centered"></div>
+                <div class="widget-container content-area horiz-area wrapping-col left">
+                  <button onclick="window.history.back();" class="btn widget uib_w_2 d-margins btn-xs btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="route_back_btn"><i class="glyphicon glyphicon-chevron-left" data-position="icon only"></i>
+                    </button>
+                </div>
+                <div class="widget-container content-area horiz-area wrapping-col right"></div>
+            </div>
+            <div class="upage-content ac0 content-area vertical-col left">
+                <div class="table-thing widget uib_w_5 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Email</label>
+                    <input class="update_me wide-control form-control default" type="text" id="email" readonly="">
+                </div>
+                <div class="table-thing widget uib_w_2 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Nama</label>
+                    <input class="update_me wide-control form-control default" type="text" id="nama">
+                </div>
+                <div class="table-thing widget uib_w_3 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Alamat</label>
+                    <input class="update_me wide-control form-control default" type="text" id="alamat">
+                </div>
+                <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Telephon</label>
+                    <input class="update_me wide-control form-control default" type="text" id="telp">
+                </div>
+
+                <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left" for="telp">Kategori</label>
+                    <select multiple="multiple" class="js-example-basic-single wide-control form-control default" name="kategori_jasa[]" id="kategori_jasa">
+                      <!-- <option value="AL">Alabama</option>                 -->
+                      <!-- <option value="WY">Wyoming</option> -->
+                    </select>
+                    <!-- <input class="wide-control form-control default" type="text" id="telp"> -->
+                  </div>
+
+                <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                  <div id="map_canvas" style="width:100%; height:350px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+      $('.update_me').keyup( function() {
+        var collumn = $(this).attr('id');
+        var value = $(this).val();
+        var jenis = 'penjual';
+        var user_id = localStorage.getItem('user_id');
+
+        $.post( rootWebService + "/update_profile",
+          { c : collumn,
+            v : value, 
+            j : jenis,
+            u : user_id   
+          }
+         );
+        });
+
+      $(document).ready(function() {
+          // $('.js-example-basic-single').select2();
+
+          var json = [];
+          
+          $('.js-example-basic-single').select2({
+              
+              ajax: {
+                  type: 'post',
+                  url: rootWebService + '/kategori_jasa',
+                  dataType: 'json',
+                  data: function (ret) {
+                      return {
+                          json: JSON.stringify(ret),
+                          delay: 0.3
+                      };
+                  },
+                  processResults: function (data) {
+                      return {
+                          results: $.map(data, function(obj) {
+                              return { id: obj.id, text: obj.text };
+                          })
+                      };
+                  },
+                  done:function(ret){
+                    // alert('test');
+                    // $('#kategori_jasa').select2().val(['3','4']).trigger('change');
+                    // console.log('test');
+                  }
+              }
+          });
+
+      });
+
+    </script>
+</body>
+
+</html>

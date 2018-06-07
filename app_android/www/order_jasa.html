@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/order_jasa_main.less.css" class="main-less">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <script src="intelxdk.js"></script>
+    <script src="cordova.js"></script>
+    
+    <script src="js/app.js"></script>
+
+    <script src="xhr.js"></script>
+    <script src="xdk/init-dev.js"></script>
+    <script type="application/javascript" src="lib/jquery.min.js"></script>
+    <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+  </head>
+
+  <body>
+    <div class="upage" id="mainpage">
+      <div class="upage-outer">
+        <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+          <h2>Order Jasa</h2>
+          <div class="widget-container wrapping-col single-centered"></div>
+          <div class="widget-container content-area horiz-area wrapping-col left">
+            <button onclick="window.history.back();" class="btn widget uib_w_2 d-margins btn-xs btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="route_back_btn"><i class="glyphicon glyphicon-chevron-left" data-position="icon only"></i>
+              </button>
+          </div>
+          <!-- <div class="widget-container wrapping-col single-centered"></div> -->
+          <!-- <div class="widget-container content-area horiz-area wrapping-col left"></div> -->
+          <div class="widget-container content-area horiz-area wrapping-col right"></div>
+        </div>
+        <div class="upage-content ac0 content-area vertical-col left">
+          <div class="alert alert-success" style="display: none;" id="success_div">
+            <strong>Order Berhasil!</strong> 
+            <br>Order anda berhasil. Silahkan menunggu konfirmasi dari penjual jasa reparasi melalui fasilitas chat atau telephon
+            <br><strong>PERINGATAN ! Mohon tidak melakukan pembayaran apapun selain ke rekening resmi kami!</strong>
+            <!-- <br>Klik di <a href="index.html">Sini</a> untuk ke halaman login -->
+          </div>
+
+          <div class="alert alert-danger" style="display: none;" id="alert_div">
+            <strong>Peringatan!</strong> 
+            <label id="danger_label">{danger-text}</label>
+          </div>
+
+          <!-- <div class="table-thing widget uib_w_3 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+            <label class="narrow-control label-top-left">Nama</label>
+            <input class="wide-control form-control default" type="text" placeholder="" id="nama_lengkap">
+          </div>
+          <div class="table-thing widget uib_w_3 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+            <label class="narrow-control label-top-left">Email</label>
+            <input class="wide-control form-control default" type="text" placeholder="" id="email">
+          </div>
+          <div class="table-thing widget uib_w_3 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+            <label class="narrow-control label-top-left">Telp</label>
+            <input class="wide-control form-control default" type="text" placeholder="" id="telp">
+          </div>
+          <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/text_area" data-ver="1">
+            <label class="narrow-control label-top-left">Alamat</label>
+            <textarea rows="2" class="wide-control form-control" wrap="soft" placeholder="" id="alamat"></textarea>
+          </div> -->
+          
+          <input type="hidden" name="email" id="email">
+          <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+            <label class="narrow-control label-top-left" for="telp">Kategori</label>
+            <select class="js-example-basic-single wide-control form-control default" name="kategori_jasa" id="kategori_jasa">
+            </select>            
+          </div>
+
+          <div class="table-thing widget uib_w_5 d-margins" data-uib="twitter%20bootstrap/text_area" data-ver="1">
+            <label class="narrow-control label-top-left">Kerusakan</label>
+            <textarea rows="2" class="wide-control form-control" wrap="soft" placeholder="" id="kerusakan"></textarea>
+          </div>
+
+          <button class="btn widget uib_w_6 d-margins btn-lg btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1">
+            <img src="images/loading.gif" width="50px" id="loading_img" style="display: none">Order
+          </button>
+
+        </div>
+        <div class="uib-footer uib-footer-fixed footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
+          <h2></h2>
+          <div class="widget-container wrapping-col single-centered"></div>
+          <div class="widget-container content-area horiz-area wrapping-col left"></div>
+          <div class="widget-container content-area horiz-area wrapping-col right"></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+
+      function isEmpty(str) {
+         return (!str || 0 === str.length);
+      }
+
+      function isBlank(str) {
+         return (!str || /^\s*$/.test(str));
+      }
+
+      $(document).on("click", ".uib_w_6", function(evt)
+      {
+         var txtKategori = $('#kategori_jasa').val();
+         var txtKerusakan  = $('#kerusakan').val();
+         var intKategoriJasa = $('#kategori_jasa').val();
+         var txtEmail = $('#email').val(); 
+
+         $('#alert_div').hide();
+         $('#loading_img').hide();
+         
+         if( isEmpty(txtKerusakan) || isEmpty(txtKategori) ){
+          $('#danger_label').html('Penjelasan kerusakan atau kategori tidak boleh kosong')
+          $('#alert_div').show();
+         }else{
+          $('#loading_img').show();
+
+            $.post(rootWebService + "/order_jasa", {
+                pelanggan_id      : localStorage.getItem('user_id'),
+                penjual_jasa_id   : localStorage.getItem('order_penjual_id'),
+                status            : 'PENDING',
+                catatan_pelanggan : txtKerusakan,
+                kategori_jasa_id  : intKategoriJasa,
+                email             : txtEmail
+            }, 'json')
+            .done(function (data) {
+
+                $('#success_div').show();
+                $('#loading_img').hide();
+
+            }); 
+         }
+
+         return false;
+      });
+
+      $(document).ready(function() {
+          var json = [];
+          
+          $('.js-example-basic-single').select2({
+              
+              ajax: {
+                  type: 'post',
+                  url: rootWebService + '/kategori_jasa',
+                  dataType: 'json',
+                  data: function (ret) {
+                      return {
+                          json: JSON.stringify(ret),
+                          delay: 0.3
+                      };
+                  },
+                  processResults: function (data) {
+                      return {
+                          results: $.map(data, function(obj) {
+                              return { id: obj.id, text: obj.text };
+                          })
+                      };
+                  }
+              }
+          });
+
+
+          $.post(rootWebService + "/profile_pelanggan", {
+                pelanggan_id: localStorage.getItem('user_id')
+            }, 'json').done(function(data) {
+                $('#email').val(data.email);
+                $('#nama_lengkap').val(data.nama_lengkap);
+                $('#alamat').val(data.alamat);
+                $('#telp').val(data.telp);
+
+                localStorage.setItem('user_latitude', data.latitude);
+                localStorage.setItem('user_longitude', data.longitude);
+
+                initialize();
+
+            });
+
+      });
+
+
+    </script>
+  </body>
+
+</html>
