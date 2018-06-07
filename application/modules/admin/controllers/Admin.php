@@ -291,14 +291,6 @@ class Admin extends CI_Controller
         }
     }
 
-
-
-    public function test_kirim_email(){
-        echo '<pre>';
-        send_email('triasfahrudin@gmail.com', 'testing email', 'test message', 'none');
-        echo '</pre>';
-    }
-
     public function pelanggan()
     {
         try {

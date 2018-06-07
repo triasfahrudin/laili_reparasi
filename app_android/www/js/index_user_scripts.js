@@ -15,9 +15,15 @@
         /* button  Masuk */
         $(document).on("click", ".uib_w_17", function(evt) {
             /* your code goes here */
+
+            $('#onclick_login').html('triggered');
+
+            var player_id = window.localStorage.getItem('player_id');
+            
             $.post(rootWebService + "/login", {
                 email: $('#email').val(),
-                password: $('#password').val()
+                password: $('#password').val(),
+                device_id : player_id
             }, 'json').done(function(data) {
                 if (data.status === 'not_found') {
                     $('#wrong_password').show();
@@ -35,6 +41,9 @@
                     }
                     //$.mobile.changePage($(document.location.href = "dashboard.html"), 'slide');
                 }
+            }).fail(function(response){
+                // var res = 'Login On Click ';
+                // $('#debug_msg').html(res + response.responseText);
             })
             return false;
         });

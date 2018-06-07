@@ -83,7 +83,6 @@
                     <div class="widget-container content-area horiz-area wrapping-col right"></div>
                 </div>
 
-
                 <div class="upage-content ac0 content-area vertical-col left" id="page_96_0">
                     <div class="widget uib_w_18 scale-image d-margins" data-uib="media/img" data-ver="0">
                         <figure class="figure-align">
@@ -96,7 +95,7 @@
                     <div class="alert no_wrap widget uib_w_9 d-margins alert-danger" data-uib="twitter%20bootstrap/alert" data-ver="1" id="no_connection" style="display:none">Tidak ada koneksi internet !</div>
 
                     <div class="table-thing widget uib_w_12 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
-                        <label class="narrow-control label-top-left">Email</label>
+                        <label class="narrow-control label-top-left" for="email">Email</label>
                         <input class="wide-control form-control default" type="text" name="email" id="email">
                     </div>
                     <div class="table-thing widget uib_w_13 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
@@ -107,6 +106,16 @@
                     <div class="btn-group uib-bs-flex widget uib_w_15 d-margins" data-uib="twitter%20bootstrap/button_group" data-ver="1">
                         <button class="btn widget uib_w_16 btn-info" data-uib="twitter%20bootstrap/button" data-ver="1">Daftar</button>
                         <button class="btn widget uib_w_17 btn-success" data-uib="twitter%20bootstrap/button" data-ver="1">Masuk</button>
+                    </div>
+                    <div class="tarea widget uib_w_19 d-margins" data-uib="media/text" data-ver="0" name="uib_w_19">
+                        <div class="widget-container left-receptacle"></div>
+                        <div class="widget-container right-receptacle"></div>
+                        <div class="text-container">
+                            Device ID : <div id="device_id"></div>
+                            BaseRoot : <div id="baseroot"></div>
+                            Debug Msg : <div id="debug_msg"></div>
+                            OnClick : <div id="onclick_login"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="uib-footer uib-footer-fixed footer-bg container-group inner-element uib_w_11" data-uib="layout/footer" data-ver="0">
@@ -119,6 +128,45 @@
             </div>
         </div>
         <script type="text/javascript">
+
+            // $.ajax(rootWebService + "/index", {
+            //   statusCode: {
+            //     404: function() {
+            //       // alert('Not working');
+            //       $('#debug_msg').html('not working');
+            //     },
+            //     200: function() {
+            //       // alert('Working');
+            //       $('#debug_msg').html('working');
+            //     }
+            //   }
+            // });
+
+            $.ajax({url: rootWebService + "/index",
+                type: "HEAD",
+                timeout:1000,
+                statusCode: {
+                    200: function (response) {
+                        $('#debug_msg').html('Working!');
+                    },
+                    400: function (response) {
+                        $('#debug_msg').html('Not working!');
+                    },
+                    0: function (response) {
+                        $('#debug_msg').html('Not working!');
+                    }              
+                }
+         });
+
+            $(document).ready(function(){
+                var device_id = window.localStorage.getItem('player_id');
+
+                $('#device_id').html(device_id);
+                $('#baseroot').html(rootWebService);
+
+
+            }) 
+
             $(document).on("click", "#lupa_pass", function(evt)
             {
                 /* your code goes here */ 

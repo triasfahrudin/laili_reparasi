@@ -73,6 +73,11 @@ class Webservice extends CI_Controller
         echo $kat;
     }
 
+
+    public function index(){
+        echo 'connected';
+    }
+
     public function pesan_tersimpan()
     {
         header('content-type: application/json');
@@ -193,27 +198,16 @@ class Webservice extends CI_Controller
         $message .= "<hr />";
         $message .= "{timestamp:" . date("Y-m-d H:i:s") . "}";
 
-        //kirim ke email pelanggan
         send_email($email, 'Order reparasi berhasil !', $message, 'none');
 
-        //kirim ke email penyedia jasa
-        $p = $this->db->get_where('penjual_jasa',array('id' => $penjual_jasa_id));
-        if($p->num_rows() > 0){
-            $res = $p->row_array();
-            $email_penyedia_jasa = $res['email'];
 
-            $message = "Ada order reparasi baru yang masuk<br />";
-            $message .= "Silahkan melakukan konfirmasi di aplikasi<br />";
-            
-            $message .= "<hr />";
-            $message .= "{timestamp:" . date("Y-m-d H:i:s") . "}";
+        //send notification to penyedia_jasa device
 
-            //kirim ke email pelanggan
-            send_email($email_penyedia_jasa, 'Order reparasi baru !', $message, 'none');
+        $penyedia_jasa = $this->db->get_where('penjual_jasa',array('id' => $penjual_jasa_id));
+        if($penyedia_jasa->num_rows() > 0){
+            $pj = $penyedia_jasa->row_array();
+            onesignal_send_msg($pj['device_id'],'Ada order baru!','Ada order baru! Silahkan cek aplikasi anda');
         }
-
-
-
 
 
         echo json_encode(array('status' => 'berhasil'));
@@ -377,6 +371,7 @@ class Webservice extends CI_Controller
 
         $email    = $this->input->post('email');
         $password = $this->encrypt_password($this->input->post('password'));
+        $device_id = $this->input->post('device_id');
 
         $qry = $this->db->get_where('pelanggan',
             array(
@@ -387,6 +382,10 @@ class Webservice extends CI_Controller
         if ($qry->num_rows() > 0) {
 
             $row = $qry->row_array();
+            
+            $this->db->where('id',$row['id']);
+            $this->db->update('pelanggan',array('device_id' => $device_id));
+
             echo json_encode(
                 array(
                     'id'        => $row['id'],
@@ -396,6 +395,8 @@ class Webservice extends CI_Controller
                     'longitude' => $row['longitude'],
                 )
             );
+
+
         } else {
 
             $qry = $this->db->get_where('penjual_jasa',
@@ -407,6 +408,11 @@ class Webservice extends CI_Controller
             if ($qry->num_rows() > 0) {
 
                 $row = $qry->row_array();
+
+
+                $this->db->where('id',$row['id']);
+                $this->db->update('penjual_jasa',array('device_id' => $device_id));
+
                 echo json_encode(
                     array(
                         'id'        => $row['id'],
@@ -575,10 +581,6 @@ class Webservice extends CI_Controller
         $penjual_jasa_id = $this->input->get('penjual_id');
         $status_transaksi = $this->input->get('status_transaksi');   
 
-        //urutan ASC => dari tanggal lama ke baru
-        //urutan DESC => dari tanggal baru ke lama  
-        $urutan = "DESC";
-
         switch ($status_transaksi) {
               case 'pending':
               /*
@@ -604,7 +606,7 @@ class Webservice extends CI_Controller
                   $this->db->join("kategori_jasa c","a.kategori_jasa_id = c.id","left");
                   $this->db->where("a.penjual_jasa_id",$penjual_jasa_id);
                   $this->db->where("a.status","PENDING");
-                  $this->db->order_by("a.tgl_transaksi",$urutan);
+                  $this->db->order_by("a.tgl_transaksi","DESC");
                   
                   $qry = $this->db->get("transaksi a");
 
@@ -617,7 +619,7 @@ class Webservice extends CI_Controller
                   $this->db->join("penjual_jasa b","a.penjual_jasa_id = b.id","left");
                   $this->db->where("a.pelanggan_id",$pelanggan_id);
                   $this->db->where("a.status","DALAM_PROSES");
-                  $this->db->order_by("a.tgl_transaksi",$urutan);
+                  $this->db->order_by("a.tgl_transaksi","DESC");
 
                   $qry = $this->db->get("transaksi a");
                   break;    
@@ -630,7 +632,7 @@ class Webservice extends CI_Controller
                   $this->db->where("a.pelanggan_id",$pelanggan_id);
                   $this->db->where("a.status","SELESAI");
                   $this->db->or_where("a.status","TOLAK");
-                  $this->db->order_by("a.tgl_transaksi",$urutan);
+                  $this->db->order_by("a.tgl_transaksi","DESC");
 
                   $qry = $this->db->get("transaksi a");
                   break;        

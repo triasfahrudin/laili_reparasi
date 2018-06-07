@@ -13,12 +13,10 @@
 
 
 -- Dumping database structure for laili_reparasi
-DROP DATABASE IF EXISTS `laili_reparasi`;
 CREATE DATABASE IF NOT EXISTS `laili_reparasi` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `laili_reparasi`;
 
 -- Dumping structure for table laili_reparasi.ci_sessions
-DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE IF NOT EXISTS `ci_sessions` (
   `id` varchar(40) NOT NULL,
   `ip_address` varchar(45) NOT NULL,
@@ -50,7 +48,6 @@ INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 /*!40000 ALTER TABLE `ci_sessions` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.dompetku
-DROP TABLE IF EXISTS `dompetku`;
 CREATE TABLE IF NOT EXISTS `dompetku` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jenis` enum('dana_masuk','dana_keluar') NOT NULL,
@@ -67,7 +64,6 @@ DELETE FROM `dompetku`;
 /*!40000 ALTER TABLE `dompetku` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.kabupaten
-DROP TABLE IF EXISTS `kabupaten`;
 CREATE TABLE IF NOT EXISTS `kabupaten` (
   `id_kab` char(4) NOT NULL,
   `id_prov` char(2) NOT NULL,
@@ -597,7 +593,6 @@ INSERT INTO `kabupaten` (`id_kab`, `id_prov`, `nama`, `id_jenis`) VALUES
 /*!40000 ALTER TABLE `kabupaten` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.kategori_jasa
-DROP TABLE IF EXISTS `kategori_jasa`;
 CREATE TABLE IF NOT EXISTS `kategori_jasa` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama` varchar(50) NOT NULL,
@@ -617,7 +612,6 @@ INSERT INTO `kategori_jasa` (`id`, `nama`, `keterangan`) VALUES
 /*!40000 ALTER TABLE `kategori_jasa` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.kecamatan
-DROP TABLE IF EXISTS `kecamatan`;
 CREATE TABLE IF NOT EXISTS `kecamatan` (
   `id_kec` char(6) NOT NULL,
   `id_kab` char(4) NOT NULL,
@@ -7726,7 +7720,6 @@ INSERT INTO `kecamatan` (`id_kec`, `id_kab`, `nama`) VALUES
 /*!40000 ALTER TABLE `kecamatan` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.kelurahan
-DROP TABLE IF EXISTS `kelurahan`;
 CREATE TABLE IF NOT EXISTS `kelurahan` (
   `id_kel` char(10) NOT NULL,
   `id_kec` char(6) DEFAULT NULL,
@@ -7735,7 +7728,7 @@ CREATE TABLE IF NOT EXISTS `kelurahan` (
   PRIMARY KEY (`id_kel`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.kelurahan: ~82,505 rows (approximately)
+-- Dumping data for table laili_reparasi.kelurahan: ~82,579 rows (approximately)
 DELETE FROM `kelurahan`;
 /*!40000 ALTER TABLE `kelurahan` DISABLE KEYS */;
 INSERT INTO `kelurahan` (`id_kel`, `id_kec`, `nama`, `id_jenis`) VALUES
@@ -90250,7 +90243,6 @@ INSERT INTO `kelurahan` (`id_kel`, `id_kec`, `nama`, `id_jenis`) VALUES
 /*!40000 ALTER TABLE `kelurahan` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.pelanggan
-DROP TABLE IF EXISTS `pelanggan`;
 CREATE TABLE IF NOT EXISTS `pelanggan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,
@@ -90263,19 +90255,19 @@ CREATE TABLE IF NOT EXISTS `pelanggan` (
   `telp` varchar(50) DEFAULT NULL,
   `tgl_daftar` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `token_reset_password` varchar(50) DEFAULT NULL,
+  `device_id` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table laili_reparasi.pelanggan: ~2 rows (approximately)
 DELETE FROM `pelanggan`;
 /*!40000 ALTER TABLE `pelanggan` DISABLE KEYS */;
-INSERT INTO `pelanggan` (`id`, `email`, `password`, `nama_lengkap`, `alamat`, `latitude`, `longitude`, `map`, `telp`, `tgl_daftar`, `token_reset_password`) VALUES
-	(1, 'pelanggan@gmail.com', '502557bd0cec3545a1ee5087549d48ad', 'Bpk. Andi', 'xxx', '-8.340142144601252', '114.30896709518493', '', '630245', '0000-00-00 00:00:00', NULL),
-	(4, 'konsumen@gmail.com', '427c829f0d362cc44959e7c5ee255194', 'Bpk.Andi', '', '0', '0', '', '666333', '0000-00-00 00:00:00', '792868');
+INSERT INTO `pelanggan` (`id`, `email`, `password`, `nama_lengkap`, `alamat`, `latitude`, `longitude`, `map`, `telp`, `tgl_daftar`, `token_reset_password`, `device_id`) VALUES
+	(1, 'pelanggan@gmail.com', '502557bd0cec3545a1ee5087549d48ad', 'Bpk. Andi', 'xxx', '-8.340142144601252', '114.30896709518493', '', '630245', '0000-00-00 00:00:00', NULL, 'undefined'),
+	(4, 'konsumen@gmail.com', '427c829f0d362cc44959e7c5ee255194', 'Bpk.Andi', '', '0', '0', '', '666333', '0000-00-00 00:00:00', '792868', NULL);
 /*!40000 ALTER TABLE `pelanggan` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.penjual_jasa
-DROP TABLE IF EXISTS `penjual_jasa`;
 CREATE TABLE IF NOT EXISTS `penjual_jasa` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama` varchar(50) NOT NULL,
@@ -90295,19 +90287,19 @@ CREATE TABLE IF NOT EXISTS `penjual_jasa` (
   `verifikasi` enum('SUDAH','BELUM') NOT NULL DEFAULT 'BELUM',
   `tgl_daftar` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `token_reset_password` varchar(50) NOT NULL,
+  `device_id` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table laili_reparasi.penjual_jasa: ~2 rows (approximately)
 DELETE FROM `penjual_jasa`;
 /*!40000 ALTER TABLE `penjual_jasa` DISABLE KEYS */;
-INSERT INTO `penjual_jasa` (`id`, `nama`, `email`, `password`, `kategori_jasa`, `provinsi`, `kabupaten`, `kecamatan`, `kelurahan`, `alamat`, `telp`, `foto`, `latitude`, `longitude`, `map`, `verifikasi`, `tgl_daftar`, `token_reset_password`) VALUES
-	(3, 'CV. Elektronik Sejahtera', 'elektronik@gmail.com', 'f4fca2a3070efed91b6adf9bbb420ead', '1,2,3,4,5', '', '', '', '', '<p>-</p>', '-', '', '-8.341649810100314', '114.30813743217004', '', 'SUDAH', '0000-00-00 00:00:00', '817659'),
-	(4, 'CV. Indah electro', 'bwi@gmail.com', 'e85af1c39ac265ad6d03762cb8d59ccd', '2,5', '', '', '', '', '<p>-</p>', '-', '', '-8.240252802299779', '114.35531179999998', '', 'BELUM', '2018-02-27 09:01:17', '');
+INSERT INTO `penjual_jasa` (`id`, `nama`, `email`, `password`, `kategori_jasa`, `provinsi`, `kabupaten`, `kecamatan`, `kelurahan`, `alamat`, `telp`, `foto`, `latitude`, `longitude`, `map`, `verifikasi`, `tgl_daftar`, `token_reset_password`, `device_id`) VALUES
+	(3, 'CV. Elektronik Sejahtera', 'elektronik@gmail.com', 'f4fca2a3070efed91b6adf9bbb420ead', '1,2,3,4,5', '', '', '', '', '<p>-</p>', '-', '', '-8.341649810100314', '114.30813743217004', '', 'SUDAH', '0000-00-00 00:00:00', '817659', NULL),
+	(4, 'CV. Indah electro', 'bwi@gmail.com', 'e85af1c39ac265ad6d03762cb8d59ccd', '2,5', '', '', '', '', '<p>-</p>', '-', '', '-8.240252802299779', '114.35531179999998', '', 'BELUM', '2018-02-27 09:01:17', '', NULL);
 /*!40000 ALTER TABLE `penjual_jasa` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.percakapan
-DROP TABLE IF EXISTS `percakapan`;
 CREATE TABLE IF NOT EXISTS `percakapan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tgl` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -90319,7 +90311,7 @@ CREATE TABLE IF NOT EXISTS `percakapan` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.percakapan: ~34 rows (approximately)
+-- Dumping data for table laili_reparasi.percakapan: ~29 rows (approximately)
 DELETE FROM `percakapan`;
 /*!40000 ALTER TABLE `percakapan` DISABLE KEYS */;
 INSERT INTO `percakapan` (`id`, `tgl`, `pesan`, `foto`, `pelanggan_id`, `penjual_id`, `pengirim`) VALUES
@@ -90360,7 +90352,6 @@ INSERT INTO `percakapan` (`id`, `tgl`, `pesan`, `foto`, `pelanggan_id`, `penjual
 /*!40000 ALTER TABLE `percakapan` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.provinsi
-DROP TABLE IF EXISTS `provinsi`;
 CREATE TABLE IF NOT EXISTS `provinsi` (
   `id_prov` char(2) NOT NULL,
   `nama` tinytext NOT NULL,
@@ -90408,7 +90399,6 @@ INSERT INTO `provinsi` (`id_prov`, `nama`) VALUES
 /*!40000 ALTER TABLE `provinsi` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.settings
-DROP TABLE IF EXISTS `settings`;
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) DEFAULT NULL,
@@ -90417,7 +90407,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.settings: ~2 rows (approximately)
+-- Dumping data for table laili_reparasi.settings: ~0 rows (approximately)
 DELETE FROM `settings`;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`id`, `title`, `tipe`, `value`) VALUES
@@ -90426,7 +90416,6 @@ INSERT INTO `settings` (`id`, `title`, `tipe`, `value`) VALUES
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.transaksi
-DROP TABLE IF EXISTS `transaksi`;
 CREATE TABLE IF NOT EXISTS `transaksi` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pelanggan_id` int(11) NOT NULL,
@@ -90445,7 +90434,7 @@ CREATE TABLE IF NOT EXISTS `transaksi` (
   `catatan_rating` text NOT NULL,
   `catatan_penjual_jasa` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='catatan_pelanggan    => berisi tentang catatan pelanggan tentang kondisi barangnya, kerusakannya, hal-hal yang bisa digunakan penjual jasa untuk perkiraan kerusakan\r\ncatatan_penjual_jasa => berisi tentang catatan penjual jasa tentang kerusakan barang setelah melihat langsung. ';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='catatan_pelanggan    => berisi tentang catatan pelanggan tentang kondisi barangnya, kerusakannya, hal-hal yang bisa digunakan penjual jasa untuk perkiraan kerusakan\r\ncatatan_penjual_jasa => berisi tentang catatan penjual jasa tentang kerusakan barang setelah melihat langsung. ';
 
 -- Dumping data for table laili_reparasi.transaksi: ~5 rows (approximately)
 DELETE FROM `transaksi`;
@@ -90455,11 +90444,11 @@ INSERT INTO `transaksi` (`id`, `pelanggan_id`, `penjual_jasa_id`, `kategori_jasa
 	(2, 1, 4, 1, 'SELESAI', 100000, '2018-05-30 06:21:20', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'test ajah', 0, '', ''),
 	(3, 1, 3, 2, 'PENDING', 0, '2018-05-30 06:26:07', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'test ajah', 0, '', ''),
 	(4, 1, 3, 1, 'PENDING', 0, '2018-05-30 14:06:40', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxxx', 0, '', ''),
-	(5, 1, 3, 1, 'PENDING', 0, '2018-05-30 14:06:40', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxxx', 0, '', '');
+	(5, 1, 3, 1, 'PENDING', 0, '2018-05-30 14:06:40', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxxx', 0, '', ''),
+	(6, 1, 3, 1, 'PENDING', 0, '2018-06-05 09:25:45', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxx', 0, '', '');
 /*!40000 ALTER TABLE `transaksi` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.user
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,

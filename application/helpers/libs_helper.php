@@ -1,29 +1,30 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-
-function random_password($pass_length = 6) {
-    $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    $pass = array(); //remember to declare $pass as an array
+function random_password($pass_length = 6)
+{
+    $alphabet    = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    $pass        = array(); //remember to declare $pass as an array
     $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
     for ($i = 0; $i < $pass_length; $i++) {
-        $n = rand(0, $alphaLength);
+        $n      = rand(0, $alphaLength);
         $pass[] = $alphabet[$n];
     }
     return implode($pass); //turn the array into a string
 }
 
-function get_val($table,$id,$return_collumn){
+function get_val($table, $id, $return_collumn)
+{
     $CI = &get_instance();
-    
+
     $CI->db->limit(1);
-    $ret = $CI->db->get_where($table,array('id' => $id))->row_array();
+    $ret = $CI->db->get_where($table, array('id' => $id))->row_array();
     return $ret[$return_collumn];
 }
 
 function format_rupiah($angka)
 {
-  $jadi = "Rp " . number_format($angka,0,',','.');
-  return $jadi;
+    $jadi = "Rp " . number_format($angka, 0, ',', '.');
+    return $jadi;
 }
 
 function generate_uuid()
@@ -343,18 +344,67 @@ if (!function_exists('convert_date_to_sql_date')) {
 
 }
 
+if (!function_exists('')) {
+    function onesignal_send_msg($player_id, $heading, $message)
+    {
+
+        $content = array("en" => $message);
+        $heading = array("en" => $heading);
+
+        $fields = array(
+            'app_id'             => "2295b7de-4c54-445c-91fc-a1b910d4734f",
+            'include_player_ids' => array($player_id),
+            'data'               => array(
+                "foo" => "bar",
+            ),
+            'contents'           => $content,
+            'headings'           => $heading,
+            'large_icon'         => 'http://lucugambar.com/wp-content/uploads/2014/07/gambar-dp-bbm-bayi-lucu-bergerak-gif.gif',
+            'android_group'      => 'kia-apps',
+            // 'android_background_layout' => array('image' => 'http://www.indonesian-publichealth.com/wp-content/uploads/2015/12/PIN-Polio-2015.png',
+            //                                      'headings_color" => "FFFF0000',
+            //                                      'contents_color" => "FF00FF00')
+            // 'big_picture' => 'http://www.indonesian-publichealth.com/wp-content/uploads/2015/12/PIN-Polio-2015.png'
+
+        );
+
+        $fields = json_encode($fields);
+
+        // print("\nJSON sent:\n");
+        // print($fields);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json; charset=utf-8',
+            'Authorization: Basic M2YxZTE3MTAtYTIxMS00NWZhLTg0YTctYzIxNzVlMTAxZTQ0',
+        )
+        );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+}
+
 if (!function_exists('send_firebase_notification')) {
-    function send_firebase_notification($msg,$registration_ids)
+    function send_firebase_notification($msg, $registration_ids)
     {
         // API access key from Google API's Console
         define('API_ACCESS_KEY', 'AAAAlK6Ub3Q:APA91bFncCqaLT3FmD42-xkbLVZQFYJ1TsklLJUlb1aNPy1E3XCncKyjud3asJb7TWtWGYbg-vXCfxv_NQy2J6tQdzIVEe3ITukGFyj30Y1yjGKY4tc0WBXL5n314ImucxHyNWiI-qHm');
-        
+
         // $msg = array (
-            //'body' => 'Bahaya bencana angin bengunan bertingkat',
-            // 'title'       => 'Bahaya !',
-            // 'priority'    => 'high',
-            // 'sound'       => 'default',
-            // 'time_to_live' => 3600
+        //'body' => 'Bahaya bencana angin bengunan bertingkat',
+        // 'title'       => 'Bahaya !',
+        // 'priority'    => 'high',
+        // 'sound'       => 'default',
+        // 'time_to_live' => 3600
         // );
 
         $fields = array('to' => $registration_ids, 'notification' => $msg);
@@ -386,7 +436,7 @@ if (!function_exists('send_email')) {
 
         $mail = new PHPMailer();
 
-        //$mail->SMTPDebug = 3;
+        // $mail->SMTPDebug = 2;
 
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
@@ -394,12 +444,13 @@ if (!function_exists('send_email')) {
         $mail->SMTPSecure = 'tls';
         $mail->SMTPAuth   = true;
 
+        //https://github.com/PHPMailer/PHPMailer/issues/1176
         $mail->SMTPOptions = array(
             'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true,
+            ),
         );
 
         $mail->Username = $CI->config->item('mail_Username');
