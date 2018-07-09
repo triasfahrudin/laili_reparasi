@@ -37,6 +37,79 @@ class Webservice extends CI_Controller
         echo json_encode(array('last_msg_id' => $this->db->insert_id()));
     }
 
+
+    public function transaksi_update_status(){
+        header('content-type: application/json');
+
+        $transaksi_id = $this->input->post('transaksi_id');
+        $status = $this->input->post('status');
+
+        if($status === 'TRANSAKSI_DITERIMA_PENJUAL'){
+
+            $this->db->where('id',$transaksi_id);
+            $this->db->update('transaksi',array('status' => 'MENUNGGU_PEMBAYARAN'));
+            echo json_encode(array('status' => 'OK'));
+
+        }elseif($status === 'TRANSAKSI_DITOLAK_PENJUAL'){
+
+            $this->db->where('id',$transaksi_id);
+            $this->db->update('transaksi',array('status' => 'TOLAK'));
+            echo json_encode(array('status' => 'OK'));
+
+        }elseif($status === 'PENJUAL_UPDATE_BIAYA'){
+
+            $biaya_disepakati = $this->input->post('nominal');
+
+            $this->db->where('id',$transaksi_id);
+            $this->db->update('transaksi',
+                array(
+                    'status' => 'MENUNGGU_PEMBAYARAN',
+                    'biaya_disepakati' => $biaya_disepakati
+                )
+            );
+
+            echo json_encode(array('status' => 'OK'));
+
+        }elseif($status === 'TRANSAKSI_DIPROSES'){
+            
+            $this->db->where('id',$transaksi_id);
+            $this->db->update('transaksi',
+                array(
+                    'status' => 'DALAM_PROSES',
+                    'tgl_diproses' => date("Y-m-d H:i:s")            
+                )
+            );
+
+            echo json_encode(array('status' => 'OK'));
+
+        }elseif($status === 'BARANG_DITERIMA_PELANGGAN'){
+            
+            $this->db->where('id',$transaksi_id);
+            $this->db->update('transaksi',
+                array(
+                    'status' => 'BARANG_DITERIMA_PELANGGAN'            
+                )
+            );
+
+            echo json_encode(array('status' => 'OK'));
+
+        }elseif($status === 'TRANSAKSI_SELESAI'){
+            
+            $this->db->where('id',$transaksi_id);
+            $this->db->update('transaksi',
+                array(
+                    'status' => 'SELESAI',
+                    'tgl_selesai' => date("Y-m-d H:i:s")            
+                )
+            );
+
+            echo json_encode(array('status' => 'OK'));
+        }
+
+
+
+    }
+
     public function pesan_belum_terbaca()
     {
 
@@ -73,8 +146,8 @@ class Webservice extends CI_Controller
         echo $kat;
     }
 
-
-    public function index(){
+    public function index()
+    {
         echo 'connected';
     }
 
@@ -186,29 +259,27 @@ class Webservice extends CI_Controller
                 'penjual_jasa_id'   => $penjual_jasa_id,
                 'kategori_jasa_id'  => $kategori_jasa_id,
                 'status'            => $status,
-                'catatan_pelanggan' => $catatan_pelanggan        
+                'catatan_pelanggan' => $catatan_pelanggan,
             )
         );
 
         $message = "Anda telah berhasil melakukan order reparasi pada reparasionline.com<br />";
         $message .= "Silahkan menunggu konfirmasi dari <br />";
         $message .= "Selalu waspada penipuan ! Jangan pernah melakukan pembayaran pada rekening selain rekening resmi orderreparasi.com! <br/>";
-        
+
         // $message .= "Klik <a href='" . site_url('password-reset/do-reset/' . $token_reset_password) . "'>disini</a> jika anda ingin mereset password anda";
         $message .= "<hr />";
         $message .= "{timestamp:" . date("Y-m-d H:i:s") . "}";
 
         send_email($email, 'Order reparasi berhasil !', $message, 'none');
 
-
         //send notification to penyedia_jasa device
 
-        $penyedia_jasa = $this->db->get_where('penjual_jasa',array('id' => $penjual_jasa_id));
-        if($penyedia_jasa->num_rows() > 0){
+        $penyedia_jasa = $this->db->get_where('penjual_jasa', array('id' => $penjual_jasa_id));
+        if ($penyedia_jasa->num_rows() > 0) {
             $pj = $penyedia_jasa->row_array();
-            onesignal_send_msg($pj['device_id'],'Ada order baru!','Ada order baru! Silahkan cek aplikasi anda');
+            onesignal_send_msg($pj['device_id'], 'Ada order baru!', 'Ada order baru! Silahkan cek aplikasi anda');
         }
-
 
         echo json_encode(array('status' => 'berhasil'));
     }
@@ -369,8 +440,8 @@ class Webservice extends CI_Controller
     {
         header('content-type: application/json');
 
-        $email    = $this->input->post('email');
-        $password = $this->encrypt_password($this->input->post('password'));
+        $email     = $this->input->post('email');
+        $password  = $this->encrypt_password($this->input->post('password'));
         $device_id = $this->input->post('device_id');
 
         $qry = $this->db->get_where('pelanggan',
@@ -382,9 +453,9 @@ class Webservice extends CI_Controller
         if ($qry->num_rows() > 0) {
 
             $row = $qry->row_array();
-            
-            $this->db->where('id',$row['id']);
-            $this->db->update('pelanggan',array('device_id' => $device_id));
+
+            $this->db->where('id', $row['id']);
+            $this->db->update('pelanggan', array('device_id' => $device_id));
 
             echo json_encode(
                 array(
@@ -395,7 +466,6 @@ class Webservice extends CI_Controller
                     'longitude' => $row['longitude'],
                 )
             );
-
 
         } else {
 
@@ -409,9 +479,8 @@ class Webservice extends CI_Controller
 
                 $row = $qry->row_array();
 
-
-                $this->db->where('id',$row['id']);
-                $this->db->update('penjual_jasa',array('device_id' => $device_id));
+                $this->db->where('id', $row['id']);
+                $this->db->update('penjual_jasa', array('device_id' => $device_id));
 
                 echo json_encode(
                     array(
@@ -437,6 +506,40 @@ class Webservice extends CI_Controller
 
         if ($qry->num_rows() > 0) {
             echo json_encode($qry->result());
+        } else {
+            echo json_encode(array('status' => 'not_found'));
+        }
+    }
+
+    public function detail_transaksi()
+    {
+        header('content-type: application/json');
+
+        $this->db->select("b.nama_lengkap AS pelanggan,c.nama AS penjual_jasa,
+                           d.nama AS kategori,a.biaya_disepakati,a.tgl_transaksi,
+                           a.tgl_diproses,tgl_selesai,a.bukti_bayar,a.verifikasi_bukti_bayar");
+        $this->db->join("pelanggan b", "a.pelanggan_id = b.id", "left");
+        $this->db->join("penjual_jasa c", "a.penjual_jasa_id = c.id", "left");
+        $this->db->join("kategori_jasa d", "a.kategori_jasa_id = d.id", "left");
+        $qry = $this->db->get_where('transaksi a', array('a.id' => $this->input->post('transaksi_id')));
+
+        if ($qry->num_rows() > 0) {
+
+            $p = $qry->row_array();
+            echo json_encode(
+                array(
+                    'pelanggan'              => $p['pelanggan'],
+                    'penjual_jasa'           => $p['penjual_jasa'],
+                    'kategori'               => $p['kategori'],
+                    'biaya_disepakati'       => $p['biaya_disepakati'],
+                    'tgl_transaksi'          => $p['tgl_transaksi'],
+                    'tgl_diproses'             => $p['tgl_diproses'],
+                    'tgl_selesai'            => $p['tgl_selesai'],
+                    'bukti_bayar'            => $p['bukti_bayar'],
+                    'verifikasi_bukti_bayar' => $p['verifikasi_bukti_bayar'],
+
+                )
+            );
         } else {
             echo json_encode(array('status' => 'not_found'));
         }
@@ -544,7 +647,6 @@ class Webservice extends CI_Controller
 
     }
 
-
     public function map_route_pelanggan()
     {
         header('content-type: application/json');
@@ -567,34 +669,78 @@ class Webservice extends CI_Controller
 
     }
 
-    public function transaksi_penjual(){
-        /*
-             pelanggan_id     : localStorage.getItem('user_id'),
-             status_transaksi : status_transaksi => {
-                pending,
-                proses,
-                selesai (selesai , tolak)
-             }
-        */
+    public function request_permintaan_penarikan_dana()
+    {
+        header('content-type: application/json');
+        $penjual_id = $this->input->post('penjual_id');
+        $nominal    = $this->input->post('nominal');
 
+        $this->db->insert('request_dana_keluar', array('penjual_jasa_id' => $penjual_id, 'nominal' => $nominal, 'status' => 'pending'));
+        echo json_encode(array('status' => 'OK'));
+    }
+
+    public function dompetku()
+    {
         header('content-type: application/json');
         $penjual_jasa_id = $this->input->get('penjual_id');
-        $status_transaksi = $this->input->get('status_transaksi');   
+
+        $this->db->limit(5);
+        $this->db->order_by('tanggal', 'DESC');
+        $qry = $this->db->get_where("dompetku", array('penjual_jasa_id' => $penjual_jasa_id));
+
+        if ($qry->num_rows() > 0) {
+            echo json_encode($qry->result());
+        } else {
+            echo json_encode(array('status' => 'not_found'));
+        }
+    }
+
+    public function daftar_req_penarikan_dana()
+    {
+        header('content-type: application/json');
+        $penjual_jasa_id = $this->input->get('penjual_id');
+
+        $this->db->limit(5);
+        $this->db->order_by('tanggal_request', 'DESC');
+        $this->db->order_by('tanggal_bayar', 'DESC');
+        $qry = $this->db->get_where("request_dana_keluar", array('penjual_jasa_id' => $penjual_jasa_id));
+
+        if ($qry->num_rows() > 0) {
+            echo json_encode($qry->result());
+        } else {
+            echo json_encode(array('status' => 'not_found'));
+        }
+    }
+
+    public function transaksi_penjual()
+    {
+        /*
+        pelanggan_id     : localStorage.getItem('user_id'),
+        status_transaksi : status_transaksi => {
+        pending,
+        proses,
+        selesai (selesai , tolak)
+        }
+         */
+
+        header('content-type: application/json');
+        $penjual_jasa_id  = $this->input->get('penjual_id');
+        $status_transaksi = $this->input->get('status_transaksi');
 
         switch ($status_transaksi) {
-              case 'pending':
-              /*
-                    '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
-                    '    <h4>Order #' + returnData.id + '</h4>' + 
-                    '    <p>Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
-                    '    <p>Telp : ' + returnData.telp_penjual_jasa + '</p>' +
-                    '    <p>Biaya disepakati : belum ditentukan</p>' +
-                    '    <p>Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
-                    '    <p>Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
-                    '    <p><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
-                    '</div>';
-              */
-                  $this->db->select("a.id,a.status,a.biaya_disepakati,
+            case 'pending':
+                /*
+                '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' +
+                '    <h4>Order #' + returnData.id + '</h4>' +
+                '    <p>Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                '    <p>Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                '    <p>Biaya disepakati : belum ditentukan</p>' +
+                '    <p>Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                '    <p>Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                '    <p><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
+                '</div>';
+                 */
+                $this->db->select("a.id,a.status,a.biaya_disepakati,
                                      b.nama_lengkap AS nama_pelanggan,
                                      b.alamat AS alamat_pelanggan,
                                      b.telp AS telp_pelanggan,
@@ -602,45 +748,64 @@ class Webservice extends CI_Controller
                                      a.catatan_pelanggan AS catatan_order,
                                      c.nama AS jenis_order,
                                      b.id AS pelanggan_id");
-                  $this->db->join("pelanggan b","a.pelanggan_id = b.id","left");
-                  $this->db->join("kategori_jasa c","a.kategori_jasa_id = c.id","left");
-                  $this->db->where("a.penjual_jasa_id",$penjual_jasa_id);
-                  $this->db->where("a.status","PENDING");
-                  $this->db->order_by("a.tgl_transaksi","DESC");
-                  
-                  $qry = $this->db->get("transaksi a");
+                $this->db->join("pelanggan b", "a.pelanggan_id = b.id", "left");
+                $this->db->join("kategori_jasa c", "a.kategori_jasa_id = c.id", "left");
+                $this->db->where("a.penjual_jasa_id", $penjual_jasa_id);
+                $this->db->where("a.status", "PENDING");
+                $this->db->or_where("a.status", "MENUNGGU_PEMBAYARAN");
+                $this->db->order_by("a.tgl_transaksi", "DESC");
 
-                  break;
+                $qry = $this->db->get("transaksi a");
 
-              case 'proses':
-                  # code...
-                  $this->db->select("a.id,a.status,a.biaya_disepakati,b.nama AS nama_penjual_jasa,b.telp AS telp_penjual_jasa,
-                                     a.tgl_transaksi,a.tgl_diproses, a.catatan_pelanggan,a.catatan_penjual_jasa,b.id AS id_penjual_jasa");
-                  $this->db->join("penjual_jasa b","a.penjual_jasa_id = b.id","left");
-                  $this->db->where("a.pelanggan_id",$pelanggan_id);
-                  $this->db->where("a.status","DALAM_PROSES");
-                  $this->db->order_by("a.tgl_transaksi","DESC");
+                break;
 
-                  $qry = $this->db->get("transaksi a");
-                  break;    
+            case 'proses':
+                # code...
+                $this->db->select("a.id,a.status,a.biaya_disepakati,
+                                     b.nama_lengkap AS nama_pelanggan,
+                                     b.alamat AS alamat_pelanggan,
+                                     b.telp AS telp_pelanggan,
+                                     a.tgl_transaksi AS tanggal_order,
+                                     a.catatan_pelanggan AS catatan_order,
+                                     c.nama AS jenis_order,
+                                     b.id AS pelanggan_id");
+                $this->db->join("pelanggan b", "a.pelanggan_id = b.id", "left");
+                $this->db->join("kategori_jasa c", "a.kategori_jasa_id = c.id", "left");
+                $this->db->where("a.penjual_jasa_id", $penjual_jasa_id);
+                $this->db->where("a.status", "DALAM_PROSES");
+                $this->db->or_where("a.status", "PEMBAYARAN_VALID");
+                $this->db->order_by("a.tgl_transaksi", "DESC");
 
-              case 'selesai':
-                  # code...
-                  $this->db->select("a.id,a.status,a.biaya_disepakati,b.nama AS nama_penjual_jasa,b.telp AS telp_penjual_jasa,
-                                     a.tgl_transaksi,a.tgl_selesai,a.catatan_pelanggan,a.catatan_penjual_jasa,b.id AS id_penjual_jasa");
-                  $this->db->join("penjual_jasa b","a.penjual_jasa_id = b.id","left");
-                  $this->db->where("a.pelanggan_id",$pelanggan_id);
-                  $this->db->where("a.status","SELESAI");
-                  $this->db->or_where("a.status","TOLAK");
-                  $this->db->order_by("a.tgl_transaksi","DESC");
+                $qry = $this->db->get("transaksi a");
+                break;
 
-                  $qry = $this->db->get("transaksi a");
-                  break;        
-              
-              default:
-                  # code...
-                  break;
-          }  
+            case 'selesai':
+                
+                $this->db->select("a.id,a.status,a.biaya_disepakati,
+                                     b.nama_lengkap AS nama_pelanggan,
+                                     b.alamat AS alamat_pelanggan,
+                                     b.telp AS telp_pelanggan,
+                                     a.tgl_transaksi AS tanggal_order,
+                                     a.tgl_diproses AS tanggal_proses,
+                                     a.tgl_selesai AS tanggal_selesai,
+                                     a.catatan_pelanggan AS catatan_order,
+                                     c.nama AS jenis_order,
+                                     b.id AS pelanggan_id");
+                $this->db->join("pelanggan b", "a.pelanggan_id = b.id", "left");
+                $this->db->join("kategori_jasa c", "a.kategori_jasa_id = c.id", "left");
+                $this->db->where("a.penjual_jasa_id", $penjual_jasa_id);
+                $this->db->where("a.status", "SELESAI");
+                $this->db->or_where("a.status", "TOLAK");
+                $this->db->or_where("a.status", "BARANG_DITERIMA_PELANGGAN");
+                $this->db->order_by("a.tgl_transaksi", "DESC");
+
+                $qry = $this->db->get("transaksi a");
+                break;
+
+            default:
+                # code...
+                break;
+        }
 
         // $qry = $this->db->query(
         //     "SELECT *
@@ -657,82 +822,37 @@ class Webservice extends CI_Controller
         }
     }
 
-    public function transaksi_pelanggan(){
+    public function transaksi_pelanggan()
+    {
         /*
-             pelanggan_id     : localStorage.getItem('user_id'),
-             status_transaksi : status_transaksi => {
-                pending,
-                proses,
-                selesai (selesai , tolak)
-             }
-        */
+        pelanggan_id     : localStorage.getItem('user_id'),
+        status_transaksi : status_transaksi => {
+        pending,
+        proses,
+        selesai (selesai , tolak)
+        }
+         */
 
         header('content-type: application/json');
-        $pelanggan_id = $this->input->get('pelanggan_id');
-        $status_transaksi = $this->input->get('status_transaksi');   
+        $pelanggan_id     = $this->input->get('pelanggan_id');
+        $status_transaksi = $this->input->get('status_transaksi');
 
-        switch ($status_transaksi) {
-              case 'pending':
-              /*
-                    '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
-                    '    <h4>Order #' + returnData.id + '</h4>' + 
-                    '    <p>Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
-                    '    <p>Telp : ' + returnData.telp_penjual_jasa + '</p>' +
-                    '    <p>Biaya disepakati : belum ditentukan</p>' +
-                    '    <p>Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
-                    '    <p>Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
-                    '    <p><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
-                    '</div>';
-              */
-                  $this->db->select("a.id,a.status,a.biaya_disepakati,b.nama AS nama_penjual_jasa,b.telp AS telp_penjual_jasa,
-                                     a.tgl_transaksi,a.catatan_pelanggan,b.id AS id_penjual_jasa");
-                  $this->db->join("penjual_jasa b","a.penjual_jasa_id = b.id","left");
-                  $this->db->where("a.pelanggan_id",$pelanggan_id);
-                  $this->db->where("a.status","PENDING");
-                  $this->db->order_by("a.tgl_transaksi","DESC");
-                  
-                  $qry = $this->db->get("transaksi a");
+        $this->db->select("a.id,a.status,
+                           a.biaya_disepakati,
+                           b.nama AS nama_penjual_jasa,
+                           b.telp AS telp_penjual_jasa,
+                           a.tgl_transaksi,
+                           a.catatan_pelanggan,
+                           b.id AS id_penjual_jasa,
+                           a.verifikasi_bukti_bayar");
+        $this->db->join("penjual_jasa b", "a.penjual_jasa_id = b.id", "left");
+        $this->db->where("a.pelanggan_id", $pelanggan_id);
+        // $this->db->where("a.status", "PENDING");
+        $this->db->order_by("a.tgl_transaksi", "DESC");
 
-                  break;
+        $qry = $this->db->get("transaksi a");
 
-              case 'proses':
-                  # code...
-                  $this->db->select("a.id,a.status,a.biaya_disepakati,b.nama AS nama_penjual_jasa,b.telp AS telp_penjual_jasa,
-                                     a.tgl_transaksi,a.tgl_diproses, a.catatan_pelanggan,a.catatan_penjual_jasa,b.id AS id_penjual_jasa");
-                  $this->db->join("penjual_jasa b","a.penjual_jasa_id = b.id","left");
-                  $this->db->where("a.pelanggan_id",$pelanggan_id);
-                  $this->db->where("a.status","DALAM_PROSES");
-                  $this->db->order_by("a.tgl_transaksi","DESC");
-
-                  $qry = $this->db->get("transaksi a");
-                  break;    
-
-              case 'selesai':
-                  # code...
-                  $this->db->select("a.id,a.status,a.biaya_disepakati,b.nama AS nama_penjual_jasa,b.telp AS telp_penjual_jasa,
-                                     a.tgl_transaksi,a.tgl_selesai,a.catatan_pelanggan,a.catatan_penjual_jasa,b.id AS id_penjual_jasa");
-                  $this->db->join("penjual_jasa b","a.penjual_jasa_id = b.id","left");
-                  $this->db->where("a.pelanggan_id",$pelanggan_id);
-                  $this->db->where("a.status","SELESAI");
-                  $this->db->or_where("a.status","TOLAK");
-                  $this->db->order_by("a.tgl_transaksi","DESC");
-
-                  $qry = $this->db->get("transaksi a");
-                  break;        
-              
-              default:
-                  # code...
-                  break;
-          }  
-
-        // $qry = $this->db->query(
-        //     "SELECT *
-        //          FROM penjual_jasa a
-        //          WHERE (a.kategori_jasa LIKE '$kategori_jasa_id,%'
-        //                 OR a.kategori_jasa LIKE '%,$kategori_jasa_id,%'
-        //                 OR a.kategori_jasa LIKE '%,$kategori_jasa_id')
-        //         ");
-
+        
         if ($qry->num_rows() > 0) {
             echo json_encode($qry->result());
         } else {

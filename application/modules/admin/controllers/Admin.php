@@ -171,24 +171,26 @@ class Admin extends CI_Controller
         }
     }
 
-
-    public function transaksi_pelanggan($pelanggan_id){
+    public function transaksi_pelanggan($pelanggan_id)
+    {
         try {
             $this->load->library('grocery_CRUD');
             $crud = new Grocery_CRUD();
 
             $crud->set_table('transaksi');
-            $crud->where('pelanggan_id',$pelanggan_id);
+            $crud->where('pelanggan_id', $pelanggan_id);
             $crud->set_subject('Data Transaksi Pelanggan');
 
-            $crud->columns('tgl_transaksi', 'penjual_jasa_id', 'status','biaya_disepakati');
+            $crud->columns('tgl_transaksi', 'penjual_jasa_id', 'status', 'biaya_disepakati');
 
             $crud->callback_column('status', function ($value, $row) {
                 $status = "";
-                if($row->tgl_selesai !== '0000-00-00 00:00:00'){
+                if ($row->status === 'SELESAI') {
                     $status = '<span class="label label-success">Selesai</span>';
-                }elseif($row->tgl_diproses !== '0000-00-00 00:00:00'){
+                } elseif ($row->status === 'DALAM_PROSES') {
                     $status = '<span class="label label-warning">Diproses</span>';
+                } elseif($row->status === 'TOLAK') {
+                    $status = '<span class="label label-danger">Ditolak</span>';
                 }else{
                     $status = '<span class="label label-default">Pending</span>';
                 }
@@ -197,13 +199,12 @@ class Admin extends CI_Controller
             });
 
             $crud->callback_column('biaya_disepakati', function ($value, $row) {
-                  return format_rupiah($row->biaya_disepakati);  
-            });    
-
+                return format_rupiah($row->biaya_disepakati);
+            });
 
             $this->breadcrumbs->push('Dashboard', '/admin');
             $this->breadcrumbs->push('Data pelanggan', '/admin/pelanggan');
-            $this->breadcrumbs->push('Data transaksi ' . get_val('pelanggan',$pelanggan_id,'nama_lengkap'), '/admin/transaksi_pelanggan/' . $pelanggan_id);
+            $this->breadcrumbs->push('Data transaksi ' . get_val('pelanggan', $pelanggan_id, 'nama_lengkap'), '/admin/transaksi_pelanggan/' . $pelanggan_id);
 
             $state = $crud->getState();
             if ($state === 'edit') {
@@ -212,7 +213,7 @@ class Admin extends CI_Controller
                 $this->breadcrumbs->push('Tambah', '/admin/transaksi_pelanggan/add');
             }
 
-            $crud->set_relation('penjual_jasa_id','penjual_jasa','nama');
+            $crud->set_relation('penjual_jasa_id', 'penjual_jasa', 'nama');
 
             $crud->display_as('penjual_jasa_id', 'Penjual Jasa');
 
@@ -231,24 +232,26 @@ class Admin extends CI_Controller
         }
     }
 
-
-    public function transaksi_penjual_jasa($penjual_jasa_id){
+    public function transaksi_penjual_jasa($penjual_jasa_id)
+    {
         try {
             $this->load->library('grocery_CRUD');
             $crud = new Grocery_CRUD();
 
             $crud->set_table('transaksi');
-            $crud->where('penjual_jasa_id',$penjual_jasa_id);
+            $crud->where('penjual_jasa_id', $penjual_jasa_id);
             $crud->set_subject('Data transaksi penjual jasa');
 
-            $crud->columns('tgl_transaksi', 'pelanggan_id', 'status','biaya_disepakati');
+            $crud->columns('tgl_transaksi', 'pelanggan_id', 'status', 'biaya_disepakati');
 
             $crud->callback_column('status', function ($value, $row) {
-                $status = "";
-                if($row->tgl_selesai !== '0000-00-00 00:00:00'){
+                
+                if ($row->status === 'SELESAI') {
                     $status = '<span class="label label-success">Selesai</span>';
-                }elseif($row->tgl_diproses !== '0000-00-00 00:00:00'){
+                } elseif ($row->status === 'DALAM_PROSES') {
                     $status = '<span class="label label-warning">Diproses</span>';
+                } elseif($row->status === 'TOLAK') {
+                    $status = '<span class="label label-danger">Ditolak</span>';
                 }else{
                     $status = '<span class="label label-default">Pending</span>';
                 }
@@ -257,13 +260,12 @@ class Admin extends CI_Controller
             });
 
             $crud->callback_column('biaya_disepakati', function ($value, $row) {
-                  return format_rupiah($row->biaya_disepakati);  
-            });    
-
+                return format_rupiah($row->biaya_disepakati);
+            });
 
             $this->breadcrumbs->push('Dashboard', '/admin');
-            $this->breadcrumbs->push('Data penjual', '/admin/penjual_jasa');
-            $this->breadcrumbs->push('Data transaksi ' . get_val('penjual_jasa',$penjual_jasa_id,'nama'), '/admin/transaksi_penjual_jasa/' . $penjual_jasa_id);
+            $this->breadcrumbs->push('Data Penjual Jasa', '/admin/penjual_jasa');
+            $this->breadcrumbs->push('Data Transaksi ' . get_val('penjual_jasa', $penjual_jasa_id, 'nama'), '/admin/transaksi_penjual_jasa/' . $penjual_jasa_id);
 
             $state = $crud->getState();
             if ($state === 'edit') {
@@ -272,7 +274,7 @@ class Admin extends CI_Controller
                 $this->breadcrumbs->push('Tambah', '/admin/transaksi_penjual_jasa/add');
             }
 
-            $crud->set_relation('pelanggan_id','pelanggan','nama_lengkap');
+            $crud->set_relation('pelanggan_id', 'pelanggan', 'nama_lengkap');
 
             $crud->display_as('pelanggan_id', 'Pelanggan');
 
@@ -317,7 +319,7 @@ class Admin extends CI_Controller
                 $this->breadcrumbs->push('Ubah', '/admin/pelanggan/edit');
             } elseif ($state === 'add') {
                 $this->breadcrumbs->push('Tambah', '/admin/pelanggan/add');
-            }            
+            }
 
             $crud->unset_add();
             $crud->unset_edit();
@@ -398,7 +400,6 @@ class Admin extends CI_Controller
 
     }
 
-
     // public function web_settings()
     // {
     //     $this->breadcrumbs->push('Dashboard', '/admin');
@@ -441,7 +442,7 @@ class Admin extends CI_Controller
             $crud->set_table('penjual_jasa');
             $crud->set_subject('Data Penjual Jasa');
 
-            $crud->columns('nama','email', 'kategori_jasa', 'telp', 'transaksi', 'tgl_daftar');
+            $crud->columns('nama', 'email', 'kategori_jasa', 'telp', 'transaksi', 'tgl_daftar');
 
             $crud->callback_before_insert(function ($post_array, $primary_key = null) {
                 $post_array['password'] = md5($post_array['email']);
@@ -456,11 +457,10 @@ class Admin extends CI_Controller
 
             $crud->unset_read_fields('password');
 
-            
             // $crud->edit_fields('email' , 'kategori_jasa','alamat','telp','foto','verifikasi','map','tgl_daftar');
             // $crud->add_fields('email', 'password', 'kategori_jasa','alamat','telp','foto','verifikasi','tgl_daftar');
 
-            $crud->required_fields('nama','email','alamat','telp');
+            $crud->required_fields('nama', 'email', 'alamat', 'telp');
 
             $this->breadcrumbs->push('Dashboard', '/admin');
             $this->breadcrumbs->push('Data Penjual jasa', '/admin/penjual-jasa');
@@ -473,7 +473,7 @@ class Admin extends CI_Controller
                 $crud->set_js("admin/plot_point_js/" . $this->uri->segment(4));
                 $crud->set_js('http://maps.googleapis.com/maps/api/js?key=AIzaSyDy5ePPPOnm2Ix6_MU7SGsUX4QzrHfH1t4&sensor=false&libraries=places"', false);
 
-             } elseif ($crud->getState() === 'add' || $crud->getState() === 'edit' || $crud->getState() === 'copy') {
+            } elseif ($crud->getState() === 'add' || $crud->getState() === 'edit' || $crud->getState() === 'copy') {
                 $this->breadcrumbs->push('Tambah', '/admin/penjual-jasa/add');
 
                 $crud->set_js("assets/manage/js/map.js?v=" . date("YmdHis"));
@@ -484,7 +484,6 @@ class Admin extends CI_Controller
             $crud->callback_edit_field('map', array($this, 'show_map_field'));
 
             $crud->set_field_upload('foto', 'uploads/foto_tempat_reparasi');
-            
 
             $crud->change_field_type('latitude', 'hidden');
             $crud->change_field_type('longitude', 'hidden');
@@ -494,19 +493,18 @@ class Admin extends CI_Controller
             // $crud->field_type('tgl_daftar', 'readonly');
             $crud->change_field_type('password', 'hidden');
 
-
             // $crud->unset_add();
             // $crud->unset_edit();
             $crud->unset_read();
 
             //set wilayah kerja
-            $arr_kat_jasa = array();
+            $arr_kat_jasa  = array();
             $kategori_jasa = $this->db->get('kategori_jasa');
             foreach ($kategori_jasa->result_array() as $kat) {
-              $arr_kat_jasa[$kat['id']] = $kat['nama'];
+                $arr_kat_jasa[$kat['id']] = $kat['nama'];
             }
 
-            $crud->field_type('kategori_jasa','multiselect',$arr_kat_jasa);
+            $crud->field_type('kategori_jasa', 'multiselect', $arr_kat_jasa);
 
             // $crud->display_as('rt','RT');
             // $crud->display_as('rw','RW');
@@ -561,12 +559,11 @@ class Admin extends CI_Controller
 
             $wilayah = new Gc_dependent_select($crud, $fields, $config);
 
-            $extra  = array('page_title' => 'Data Pelanggan');
-            $js     = $wilayah->get_js();
+            $extra = array('page_title' => 'Data Pelanggan');
+            $js    = $wilayah->get_js();
 
             $output = $crud->render();
             $output->output .= $js;
-
 
             $output = array_merge((array) $output, $extra);
 
@@ -576,7 +573,110 @@ class Admin extends CI_Controller
         }
     }
 
-    public function transaksi(){
+    public function update_status_penarikan_dana()
+    {
+        if (!empty($_POST)) {
+            $id     = $this->input->post('id');
+            $status = $this->input->post('status');
+
+            if($status === 'dibayar'){
+                $this->db->where('id', $id);
+                $this->db->update('request_dana_keluar', array('status' => $status,'tanggal_bayar' => date("Y-m-d H:i:s") ));
+            }else{
+                $this->db->where('id', $id);
+                $this->db->update('request_dana_keluar', array('status' => $status));
+            }
+
+            
+        }
+    }
+
+    public function penarikan_dana()
+    {
+        try {
+            $this->load->library('grocery_CRUD');
+            $crud = new Grocery_CRUD();
+
+            $crud->set_table('request_dana_keluar');
+            $crud->set_subject('Permintaan Dana Keluar');
+
+            $crud->columns('penjual_jasa_id', 'nominal',   'status_bayar', 'tanggal_request','keterangan');
+
+            $crud->set_relation('penjual_jasa_id', 'penjual_jasa', 'nama');
+
+            $crud->callback_column('status_bayar', function ($value, $row) {
+                if ($row->status === 'pending') {
+                    return '<a href="#" onclick="update_status_penarikan_dana(' . $row->id .',\'dibayar\')"><span class="label label-success">BAYAR</span></a>&nbsp|&nbsp;<a href="#" onclick="update_status_penarikan_dana(' . $row->id .',\'ditolak\')"><span class="label label-danger">TOLAK</span></a>';
+                } elseif ($row->status === 'dibayar') {
+                    return '<span class="label label-success">DIBAYAR</span>';
+                } else {
+                    return '<span class="label label-danger">DITOLAK</span>';
+                }
+            });
+
+            $crud->callback_column('keterangan', function ($value, $row) {
+                $penjual_jasa_id = $row->penjual_jasa_id;
+                $saldo = 0;
+
+                $this->db->order_by('id','DESC');
+                $rs_dompetku = $this->db->get_where('dompetku',array('penjual_jasa_id' => $penjual_jasa_id));
+
+                $penjual_jasa = $this->db->get_where('penjual_jasa',array('id' => $penjual_jasa_id))->row_array();
+
+
+                if($rs_dompetku->num_rows() > 0){
+                    $dompetku = $rs_dompetku->row_array();
+                    $saldo = $dompetku['saldo_akhir'];
+                }
+
+                if($row->status === 'pending'){
+                    
+                    $status_kecukupan_dana = 'TIDAK CUKUP';
+                    if($row->nominal <= $saldo){
+                        $status_kecukupan_dana = 'CUKUP';
+                    }
+
+                    return  'Rekening : ' . $penjual_jasa['bank'] . ' ( ' . $penjual_jasa['rekening_bank'] . ') <br> Saldo: Rp ' . $saldo . ' (' . $status_kecukupan_dana  .')';
+
+                }elseif($row->status === 'dibayar'){
+                    return 'Dibayar pada : ' . $row->tanggal_bayar;
+                }
+
+
+                // return $row->status;
+                
+            });
+
+            $crud->display_as('penjual_jasa_id', 'Penjual Jasa');
+
+            $this->breadcrumbs->push('Dashboard', '/admin');
+            $this->breadcrumbs->push('Penarikan Dana', '/admin/penarikan_dana');
+
+            // $state = $crud->getState();
+            // if ($state === 'edit') {
+            //     $this->breadcrumbs->push('Ubah', '/admin/transaksi/edit');
+            // } elseif ($state === 'add') {
+            //     $this->breadcrumbs->push('Tambah', '/admin/transaksi/add');
+            // }
+
+            $crud->unset_add();
+            $crud->unset_edit();
+            $crud->unset_delete();
+            $crud->unset_read();
+
+            $extra  = array('page_title' => 'Permintaan Dana Keluar');
+            $output = $crud->render();
+
+            $output = array_merge((array) $output, $extra);
+
+            $this->_page_output($output);
+        } catch (Exception $e) {
+            show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
+        }
+    }
+
+    public function transaksi()
+    {
         //pelanggan id, penjual_jasa_id, status,biaya_disepakati,tgl_transaksi
         try {
             $this->load->library('grocery_CRUD');
@@ -585,44 +685,43 @@ class Admin extends CI_Controller
             $crud->set_table('transaksi');
             $crud->set_subject('Data Transaksi');
 
-            $crud->columns('pelanggan_id','penjual_jasa_id','status','biaya_disepakati','detail','percakapan');
+            $crud->columns('pelanggan_id', 'penjual_jasa_id', 'status', 'biaya_disepakati', 'detail');
 
-            $crud->set_relation('pelanggan_id','pelanggan','email');
-            $crud->set_relation('penjual_jasa_id','penjual_jasa','nama');
-            
+            $crud->set_relation('pelanggan_id', 'pelanggan', 'email');
+            $crud->set_relation('penjual_jasa_id', 'penjual_jasa', 'nama');
 
             $crud->callback_column('detail', function ($value, $row) {
                 return '<a href="#" onclick="lihat_detail_transaksi(\'' . $row->id . '\')">Lihat</a>';
             });
 
-            $crud->callback_column('percakapan', function ($value, $row) {
-                //<a data-toggle="modal" href="#myModal">Open Modal</a>
-                return '<a href="#" onclick="lihat_percakapan(\'' . $row->id . '\')">Lihat</a>';
-            });
+            // $crud->callback_column('percakapan', function ($value, $row) {                
+            //     return '<a href="#" onclick="lihat_percakapan(\'' . $row->id . '\')">Lihat</a>';
+            // });
 
             $crud->callback_column('biaya_disepakati', function ($value, $row) {
-                if($row->status === '<span class="label label-success">AMBIL</span>'){
+                if ($row->status === '<span class="label label-default">SELESAI</span>') {
                     return format_rupiah($row->biaya_disepakati);
-                }else{
+                } else {
                     return 'Rp.-';
                 }
-                
+
             });
 
             $crud->callback_column('status', function ($value, $row) {
-                if($row->status === 'PENDING'){
+                if ($row->status === 'PENDING') {
                     return '<span class="label label-default">PENDING</span>';
-                }elseif($row->status === 'AMBIL'){
-                    return '<span class="label label-success">AMBIL</span>';
-                }else{
+                } elseif ($row->status === 'DALAM_PROSES') {
+                    return '<span class="label label-success">DALAM PROSES</span>';
+                } elseif ($row->status === 'SELESAI') {
+                    return '<span class="label label-default">SELESAI</span>';
+                } else {
                     return '<span class="label label-danger">TOLAK</span>';
-                }                
+                }
             });
 
-            $crud->display_as('pelanggan_id','Pelanggan');
-            $crud->display_as('penjual_jasa_id','Penjual Jasa');
+            $crud->display_as('pelanggan_id', 'Pelanggan');
+            $crud->display_as('penjual_jasa_id', 'Penjual Jasa');
 
-            
             $this->breadcrumbs->push('Dashboard', '/admin');
             $this->breadcrumbs->push('Data Transaksi', '/admin/transaksi');
 
@@ -632,8 +731,6 @@ class Admin extends CI_Controller
             } elseif ($state === 'add') {
                 $this->breadcrumbs->push('Tambah', '/admin/transaksi/add');
             }
-
-
 
             $crud->unset_add();
             $crud->unset_edit();

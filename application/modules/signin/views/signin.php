@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo site_url('assets/signin/css/style.css')?>">
     <!--Google Font - Work Sans-->
     <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
 
   </head>
   <body>
@@ -32,7 +32,7 @@
               </div>
 
 
-              <?php echo $this->recaptcha->render();?>
+              <?php //echo $this->recaptcha->render();?>
 
               <div class="profile__footer">
                 <button class="btn" type="submit">Login</button>

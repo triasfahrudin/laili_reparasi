@@ -13,8 +13,11 @@
 // // ...event handler code here...
 // }
 // ...additional event handlers here...
-//var rootWebService = "http://localhost/laili_reparasi/webservice";
-var rootWebService = "http://192.168.127.1/laili_reparasi/webservice";
+var rootWebService = "http://localhost/laili_reparasi/webservice";
+//var rootWebService = "http://192.168.127.1/laili_reparasi/webservice";//aku
+// var rootWebService = "http://192.168.113.1/laili_reparasi/webservice";//laili
+
+
 
 //======================onesignal============================
 //https://documentation.onesignal.com/docs/intel-xdk-setup

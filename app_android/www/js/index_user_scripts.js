@@ -16,7 +16,7 @@
         $(document).on("click", ".uib_w_17", function(evt) {
             /* your code goes here */
 
-            $('#onclick_login').html('triggered');
+            // $('#onclick_login').html('triggered');
 
             var player_id = window.localStorage.getItem('player_id');
             

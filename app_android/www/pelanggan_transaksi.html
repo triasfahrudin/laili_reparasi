@@ -23,67 +23,104 @@
             window.location = "chat.html";      
          }
 
+         function terima(trans_id){
+            //terima dan menunggu pembayaran
+            $.post(rootWebService + "/transaksi_update_status",{
+                transaksi_id : trans_id,
+                status : 'BIAYA_DITERIMA_PEMBELI'
+            },'json').done(function (data){              
+              window.location = "pelanggan_transaksi.html";
+            })            
+         }
+
+         function tolak(trans_id){
+            // localStorage.setItem('aksi_transaksi_id',transaksi_id);
+
+            $.post(rootWebService + "/transaksi_update_status",{
+                transaksi_id : trans_id,
+                status : 'BIAYA_DITOLAK_PEMBELI'
+            },'json').done(function (data){
+              window.location = "pelanggan_transaksi.html";
+            })
+            
+         }
+
          function get_transaksi(status_transaksi) {
 
+            var konten_trans_menunggu = '';
+            var konten_trans_proses = '';
+            var konten_trans_selesai = '';
+
             $.get(rootWebService + "/transaksi_pelanggan", {
-                  pelanggan_id     : localStorage.getItem('user_id'),
-                  status_transaksi : status_transaksi
+                  pelanggan_id     : localStorage.getItem('user_id')                  
                 }, 'json')
                 .done(function (data) {
                     
-                    var konten = '';
+                    var i = 0;
+                    var color_class = new Array("default", "primary", "success",'danger','warning','info');
 
-                    if (data.status === 'not_found') {
-                        $('#transaksi_' + status_transaksi).html('<div class="alert alert-warning" role="alert">Belum ada data</div>');
-                    } else {
-                        var i = 0;
-                        var color_class = new Array("default", "primary", "success",'danger','warning','info');
+                    $.each(data, function (index, returnData) {
 
-                        $.each(data, function (index, returnData) {
-                            
-                          konten += 
-                            '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
-                            '    <h4>Order #' + returnData.id + '</h4>' + 
-                            '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
-                            '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
-                            '    <p style="margin: 1px;">Biaya disepakati : ' + (returnData.biaya_disepakati == 0 ? 'belum ditentukan' : returnData.biaya_disepakati) +'</p>' +
-                            '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
-                            '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>';
+                        if(returnData.status === 'PENDING'){
+                             konten_trans_menunggu += 
+                                '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                '    <h4>Order #' + returnData.id + '</h4>' + 
+                                '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                '    <!--<p style="margin: 1px;">Biaya disepakati : ' + (returnData.biaya_disepakati == 0 ? 'belum ditentukan' : returnData.biaya_disepakati) +'</p>-->' +
+                                '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                '    <p>Status : <span class="label label-default">MENUNGGU_TANGGAPAN_PENJUAL</span></p>' +
+                                '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>';
+                                '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>';
+                                '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>';    
+                                '    <p style="margin: 1px;"><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
+                                '</div>';  
+                        }else if(returnData.status === 'MENUNGGU_PEMBAYARAN'){
 
-                          if(status_transaksi === 'proses'){
-                            konten += '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>';
-                            konten += '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>';
-                          }
+                              if(returnData.verifikasi_bukti_bayar === 'PENDING'){
+                                 konten_trans_menunggu += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-warning">MENUNGGU_TANGGAPAN_PEMBELI</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
+                                    '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-warning btn-xs" onClick="terima(' + returnData.id +')">TERIMA</button>&nbsp;&nbsp;' + 
+                                    '            <button type="button" class="btn btn-danger btn-xs" onClick="tolak(' + returnData.id +')">TOLAK</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
+                              }else if(returnData.verifikasi_bukti_bayar === 'VALID'){
 
-                          if(status_transaksi === 'selesai'){
-                            konten +=  '    <p style="margin: 1px;">Tanggal Selesai: ' + returnData.tgl_selesai + '</p>';
-                            konten +=  '    <p style="margin: 1px;">Status: ' + returnData.status + '</p>';
-                            konten += '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>';
-                          }                            
-                           
-                           konten += 
-                            '    <p style="margin: 1px;"><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
-                            '</div>';
+                              }else{
 
-                            if(i <= 5){
-                              i++;  
-                            }else{
-                              i = 0;
-                            }
-                            
+                              }
 
-                        });
+                              
+                        }
 
-                        $('#transaksi_' + status_transaksi).html(konten);
 
-                    }
+                        if(i <= 5){
+                          i++;  
+                        }else{
+                          i = 0;
+                        }
+                    });  
 
+                    $('#trans_menunggu').html(konten_trans_menunggu);
+                    $('#trans_proses').html(konten_trans_proses);
+                    $('#trans_selesai').html(konten_trans_selesai); 
+                        
                 });
-        }
+          }
 
-        get_transaksi('pending');
-        get_transaksi('proses');
-        get_transaksi('selesai');
+        get_transaksi();
+        
 
       </script>
    </head>
@@ -131,7 +168,7 @@
                                             <strong>Silahkan menunggu konfirmasi penjual jasa melalui pesan masuk atau telephon</strong> 
                                           </div>
                                           <!-- <h4>Cross-browser compatibility</h4> <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p>  -->
-                                          <div id="transaksi_pending"></div>
+                                          <div id="trans_menunggu"></div>
                                        </div>
                                     </div>
                                     <div class="tab-pane" id="tab_default_2">
@@ -141,7 +178,7 @@
                                              <strong>Reparasi barang anda masih dalam proses. Anda bisa mengirimkan pesan kepada penjual jasa untuk mengetahui proses perbaikannya</strong> 
                                           </div>
                                           <!-- <h4>Cross-browser compatibility</h4> <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p>  -->
-                                          <div id="transaksi_proses"></div>
+                                          <div id="trans_proses"></div>
                                        </div>
                                        
                                     </div>
@@ -152,7 +189,7 @@
                                              <strong>Terimakasih telah menggunakan jasa kami</strong> 
                                           </div>
                                           <!-- <h4>Cross-browser compatibility</h4> <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p>  -->
-                                          <div id="transaksi_selesai"></div>
+                                          <div id="trans_selesai"></div>
                                        </div>
                                        
                                     </div>

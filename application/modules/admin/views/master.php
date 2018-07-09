@@ -15,47 +15,47 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
       <style>
          .pac-card {
-         margin: 10px 10px 0 0;
-         border-radius: 2px 0 0 2px;
-         box-sizing: border-box;
-         -moz-box-sizing: border-box;
-         outline: none;
-         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-         background-color: #fff;
-         font-family: Roboto;
+            margin: 10px 10px 0 0;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            font-family: Roboto;
          }
          #pac-container {
-         padding-bottom: 12px;
-         margin-right: 12px;
+            padding-bottom: 12px;
+            margin-right: 12px;
          }
          .pac-controls {
-         display: inline-block;
-         padding: 5px 11px;
+            display: inline-block;
+            padding: 5px 11px;
          }
          .pac-controls label {
-         font-family: Roboto;
-         font-size: 13px;
-         font-weight: 300;
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
          }
          #pac-input {
-         background-color: #fff;
-         font-family: Roboto;
-         font-size: 15px;
-         font-weight: 300;
-         margin-left: 12px;
-         padding: 0 11px 0 13px;
-         text-overflow: ellipsis;
-         width: 400px;
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
          }
          #pac-input:focus {
-         border-color: #4d90fe;
+            border-color: #4d90fe;
          }
          #title {
-         color: #fff;
-         background-color: #4d90fe;
-         font-size: 25px;
-         font-weight: 500;
-         padding: 6px 12px;
+            color: #fff;
+            background-color: #4d90fe;
+            font-size: 25px;
+            font-weight: 500;
+            padding: 6px 12px;
          }
          #target {
          width: 345px;
@@ -138,6 +138,17 @@
          $(document).ready(function(){
            <?php echo @$grocery_btn?>
          });
+
+         function update_status_penarikan_dana(id,status){
+
+            $.post( "<?php echo site_url('admin/update_status_penarikan_dana');?>", {
+                  id : id,
+                  status     : status
+                }, 'json')
+                .done(function (data) {
+                  location.reload(); 
+                });
+         }
       </script>
    </head>
    <body>
@@ -205,6 +216,7 @@
                            <li><a href="<?php echo site_url('admin/pelanggan')?>"><span class="glyphicon glyphicon-list-alt"></span> Pelanggan</a></li>
                            <li><a href="<?php echo site_url('admin/penjual_jasa')?>"><span class="glyphicon glyphicon-list-alt"></span> Penjual Jasa</a></li>
                            <li><a href="<?php echo site_url('admin/transaksi')?>"><span class="glyphicon glyphicon-list-alt"></span> Transaksi</a></li>
+                           <li><a href="<?php echo site_url('admin/penarikan_dana')?>"><span class="glyphicon glyphicon-list-alt"></span> Penarikan Dana</a></li>
                            <li><a href="<?php echo site_url('admin/web_settings')?>"><span class="glyphicon glyphicon-wrench"></span> Web Settings</a></li>
                         </ul>
                      </div>
@@ -341,7 +353,7 @@
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Detail Transaksi</h4>
                </div>
-               <div class="modal-body">
+               <div class="modal-body" id="detail_transaksi">
                   
                </div>
                <!-- <div class="modal-footer">
@@ -404,23 +416,62 @@
             <?php endforeach;
             endif; ?>
          
-          // $(".fancybox").fancybox({
-          //   openEffect: "elastic",
-          //   closeEffect: "elastic"
-          // });
-         
-         
          
           $(document).on("keypress", "form", function(event) { 
               return event.keyCode != 13;
           });
 
-          function lihat_percakapan(transaksi_id){
-            $('#modalPercakapan').modal();
-          }
-
           function lihat_detail_transaksi(transaksi_id){
-            $('#modalDetailTransaksi').modal();
+            
+            $.post("<?php echo site_url('webservice/detail_transaksi');?>", {
+                transaksi_id: transaksi_id
+            }, 'json').done(function(data) {
+                
+                var konten = 
+                '<table class="table">' +
+                '   <tbody>' +
+                '     <tr>' +
+                '       <td>Nama Pelanggan</td>' +
+                '       <td>' + data.pelanggan +'</td>' +
+                '     </tr>' +
+                '     <tr>' +
+                '       <td>Penyedia Jasa</td>' +
+                '       <td>' + data.penjual_jasa +'</td>' +
+                '     </tr>' +      
+                '     <tr>' +
+                '       <td>Kategori</td>' +
+                '       <td>' + data.kategori +'</td>' +
+                '     </tr>' +      
+                '     <tr>' +
+                '       <td>Biaya Disepakati</td>' +
+                '       <td>' + data.biaya_disepakati +'</td>' +
+                '     </tr> ' +     
+                '     <tr>' +
+                '       <td>Tanggal transaksi</td>' +
+                '       <td>' + data.tgl_transaksi +'</td>' +
+                '     </tr>' +      
+                '     <tr>' +
+                '       <td>Tanggal Proses</td>' +
+                '       <td>' + data.tgl_diproses +'</td>' +
+                '     </tr>' +      
+                '     <tr>' +
+                '       <td>Tanggal Selesai</td>' +
+                '       <td>' + data.tgl_selesai +'</td>' +
+                '     </tr>' +                      
+                '   </tbody>' +
+                '</table>';
+
+                $('#detail_transaksi').html(konten);
+
+                $('#modalDetailTransaksi').modal();  
+
+               
+
+
+            });
+
+
+            
           }
       </script>
    </body>

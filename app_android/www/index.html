@@ -111,10 +111,10 @@
                         <div class="widget-container left-receptacle"></div>
                         <div class="widget-container right-receptacle"></div>
                         <div class="text-container">
-                            Device ID : <div id="device_id"></div>
-                            BaseRoot : <div id="baseroot"></div>
-                            Debug Msg : <div id="debug_msg"></div>
-                            OnClick : <div id="onclick_login"></div>
+                            <div id="device_id"></div>
+                            <div id="baseroot"></div>
+                            <div id="debug_msg"></div>
+                            <div id="onclick_login"></div>
                         </div>
                     </div>
                 </div>
@@ -142,30 +142,30 @@
             //   }
             // });
 
-            $.ajax({url: rootWebService + "/index",
-                type: "HEAD",
-                timeout:1000,
-                statusCode: {
-                    200: function (response) {
-                        $('#debug_msg').html('Working!');
-                    },
-                    400: function (response) {
-                        $('#debug_msg').html('Not working!');
-                    },
-                    0: function (response) {
-                        $('#debug_msg').html('Not working!');
-                    }              
-                }
-         });
+         //    $.ajax({url: rootWebService + "/index",
+         //        type: "HEAD",
+         //        timeout:1000,
+         //        statusCode: {
+         //            200: function (response) {
+         //                $('#debug_msg').html('Server connection : Connected!');
+         //            },
+         //            400: function (response) {
+         //                $('#debug_msg').html('Server connection : Not working!');
+         //            },
+         //            0: function (response) {
+         //                $('#debug_msg').html('Server connection : Not working!');
+         //            }              
+         //        }
+         // });
 
-            $(document).ready(function(){
-                var device_id = window.localStorage.getItem('player_id');
+            // $(document).ready(function(){
+            //     var device_id = window.localStorage.getItem('player_id');
 
-                $('#device_id').html(device_id);
-                $('#baseroot').html(rootWebService);
+            //     $('#device_id').html('Device ID : ' + device_id);
+            //     $('#baseroot').html('BaseRoot : ' + rootWebService);
 
 
-            }) 
+            // }) 
 
             $(document).on("click", "#lupa_pass", function(evt)
             {

@@ -15,6 +15,8 @@
 <plugin name="cordova-plugin-compat" spec="1.0.0"/>
 <plugin name="cordova-plugin-geolocation" spec="2.2.0"/>
 <plugin name="cordova-plugin-dialogs" spec="1.2.1"/>
+<plugin name="onesignal-cordova-plugin-pgb-compat" spec="https://github.com/one-signal/OneSignal-Cordova-SDK.git#cb5546c"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
+<plugin name="onesignal-cordova-dependencies-compat" spec="https://github.com/OneSignal/OneSignal-Cordova-Dependencies-Compat#4565b15"/> <!-- If available via Cordova registry; consider changing to an NPM reference. -->
 <plugin name="cordova-plugin-legacy-whitelist" spec="1.1.1"/>
 <platform  name="ios">
     <!-- below requires the splash screen plugin -->

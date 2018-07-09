@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
    <head>
       <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
       <!-- <link rel="stylesheet" type="text/css" href="css/daftar-penjual-perkategori_main.less.css" class="main-less"> -->
@@ -17,7 +18,6 @@
       <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
       <script type="application/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript">
-
          function goto_route(pelanggan_id){
             localStorage.setItem('route_pelanggan_id', pelanggan_id);
             window.location = "map_route_pelanggan.html";    
@@ -37,8 +37,26 @@
          //   navigator.notification.alert('Konfirmasi Aksi', showConfirm, 'Confirm Title', 'Button 1, Button 2, Button3');
          // }
 
-         function aksi(transaksi_id){
-            localStorage.setItem('aksi_transaksi_id',transaksi_id);
+         function terima(trans_id){
+            //terima dan menunggu pembayaran
+            $.post(rootWebService + "/transaksi_update_status",{
+                transaksi_id : trans_id,
+                status : 'TRANSAKSI_DITERIMA_PENJUAL'
+            },'json').done(function (data){
+              localStorage.setItem("trans_id_update_biaya",trans_id);
+              window.location = "penjual_update_biaya.html";
+            })            
+         }
+
+         function tolak(trans_id){
+            // localStorage.setItem('aksi_transaksi_id',transaksi_id);
+
+            $.post(rootWebService + "/transaksi_update_status",{
+                transaksi_id : trans_id,
+                status : 'TRANSAKSI_DITOLAK_PENJUAL'
+            },'json').done(function (data){
+
+            })
             
          }
 
@@ -51,6 +69,8 @@
                 .done(function (data) {
                     
                     var konten = '';
+                    var konfirmasi_tolak = '';
+                    var konfirmasi_terima = '';
 
                     if (data.status === 'not_found') {
                         $('#konten').html('<div class="alert alert-warning" role="alert">Belum ada data</div>');
@@ -59,19 +79,46 @@
                         var color_class = new Array("default", "primary", "success",'danger','warning','info');
 
                         $.each(data, function (index, returnData) {
-                            
-                          konten += 
-                            '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                       
+                          if(returnData.status === 'PENDING'){
+                            konten += 
+                            '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="item_' + returnData.id + '">' + 
                             '    <h4>Transaksi #' + returnData.id + '</h4>' +
                             '    <p>Nama : ' + returnData.nama_pelanggan + '</p>' + 
                             '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
                             '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
                             '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
+                            '    <p>Status : <span class="label label-default">PENDING</span></p>' +
                             '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
-                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger btn-xs" onClick="aksi(' + returnData.id +')">AKSI</button></p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' + 
+                            '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' + 
+                            '       <button type="button" class="btn btn-warning btn-xs" onClick="terima(' + returnData.id +')">TERIMA</button>' + 
+                            '       <button type="button" class="btn btn-danger btn-xs" onClick="tolak(' + returnData.id +')">TOLAK</button>' + 
+                            '    </p>' +
                             '</div>';
 
+                          }else if(returnData.status === 'MENUNGGU_PEMBAYARAN'){
+                            konten += 
+                            '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="item_' + returnData.id + '">' + 
+                            '    <h4>Transaksi #' + returnData.id + '</h4>' +
+                            '    <p>Nama : ' + returnData.nama_pelanggan + '</p>' + 
+                            '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
+                            '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
+                            '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
+                            '    <p>Biaya ditawarkan : ' + returnData.biaya_disepakati + '</p>' +
+                            '    <p>Status : <span class="label label-warning">MENUNGGU_PEMBAYARAN</span></p>' +
+                            '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
+                            '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' + 
+                            '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' + 
+                            '       <!--<button type="button" class="btn btn-warning btn-xs" onClick="terima(' + returnData.id +')">TERIMA</button>' + 
+                            '       <button type="button" class="btn btn-danger btn-xs" onClick="tolak(' + returnData.id +')">TOLAK</button>-->' + 
+                            '    </p>' +
+                            '</div>';
+
+                          }
+                          
                             if(i <= 5){
                               i++;  
                             }else{
@@ -97,6 +144,7 @@
         // }
       </script>
    </head>
+
    <body>
       <div class="upage" id="mainpage">
          <div class="upage-outer">
@@ -113,10 +161,16 @@
                </div>
             </div>
             <div class="upage-content ac0 content-area vertical-col left" id="konten">
-               <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3"> <h4>Cross-browser compatibility</h4> <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p> </div>
-            </div>  
-            
+               
+
+               <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3">
+                  <h4>Cross-browser compatibility</h4> 
+                  <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p>
+               </div>
+            </div>
+
          </div>
       </div>
    </body>
+
 </html>
