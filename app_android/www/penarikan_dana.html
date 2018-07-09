@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link class="main-less" href="css/penarikan_dana_main.less.css" rel="stylesheet" type="text/css">
+                <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" name="viewport">
+                        <script src="intelxdk.js"></script>
+                        <script src="cordova.js"></script>
+                        <script src="js/app.js"></script>
+                        <script src="xhr.js"></script>
+                        <script src="xdk/init-dev.js"></script>
+                        <script src="lib/jquery.min.js" type="application/javascript"></script>
+                        <script src="marginal/marginal-position.min.js" type="application/javascript"></script>
+
+
+                        <script type="text/javascript">
+                           function kirim_permintaan() {
+
+                              $.post(rootWebService + "/request_permintaan_penarikan_dana", {
+                                    penjual_id : localStorage.getItem('user_id'),
+                                    nominal : $('#nominal').val()
+                                  }, 'json')
+                                  .done(function (data) {
+                                      $('#success_div').show();                                   
+                                  });
+                          }
+
+
+                          function getReqPenarikan() {
+
+                            $.get(rootWebService + "/daftar_req_penarikan_dana", {
+                                  penjual_id : localStorage.getItem('user_id')
+                                }, 'json')
+                                .done(function (data) {
+                                    
+                                    var konten = '';
+
+                                    if (data.status === 'not_found') {
+                                        $('#konten').html('<div class="alert alert-warning" role="alert">Belum ada data</div>');
+                                    } else {
+                                        
+                                        konten += '<table class="table table-bordered table-responsive">' +
+                                                    '  <thead>' +
+                                                    '    <tr>' +
+                                                    '      <th>PERMINTAAN</th>' +    
+                                                    '      <th>NOMINAL</th>' +                                                    
+                                                    '      <th>STATUS</th>' +
+                                                    '      <th>BAYAR</th>' +                                                    
+                                                    '    </tr>' +
+                                                    ' </thead>' +
+                                                    '  <tbody>';
+                                        $.each(data, function (index, returnData) {
+                                                     
+                                          konten += '<tr>' +
+                                                    ' <td>' + returnData.tanggal_request + '</td>' +
+                                                    ' <td>' + returnData.nominal + '</td>' +
+                                                    ' <td>' + returnData.status + '</td>' +
+                                                    ' <td>' + (returnData.status !== 'dibayar' ? '-' : returnData.tanggal_bayar)  + '</td>' +
+                                                    '<tr>';
+
+                                          
+
+                                        });
+
+                                        konten += ' </tbody>' +
+                                                    '</table>'          ;
+
+                                        $('#konten').html(konten);
+
+                                    }
+
+                                });
+                        }
+
+                        getReqPenarikan();                          
+
+                          
+                        </script>
+                    </meta>
+                </meta>
+            </link>
+        </link>
+    </head>
+    <body>
+        <div class="upage" id="mainpage">
+            <div class="upage-outer">
+                <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                    <h2>
+                        PENARIKAN DANA
+                    </h2>
+                    <div class="widget-container wrapping-col single-centered">
+                    </div>
+                    <div class="widget-container content-area horiz-area wrapping-col left">
+                        <button class="btn widget uib_w_3 d-margins btn-xs btn-success" data-uib="twitter%20bootstrap/button" data-ver="1" id="back" onclick="window.location='dompetku.html'">
+                            <i class="glyphicon glyphicon-arrow-left" data-position="icon only">
+                            </i>
+                        </button>
+                    </div>
+                    <div class="widget-container content-area horiz-area wrapping-col right">
+                    </div>
+                </div>
+                <div class="upage-content ac0 content-area vertical-col left">
+                    <div class="alert alert-success" style="display: none;" id="success_div">
+                      <strong>Berhasil!</strong> 
+                      <br>Permintaan berhasil dikirimkan.                      
+                    </div>
+
+
+                    <div class="table-thing widget uib_w_2 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                        <label class="narrow-control label-inline">
+                            NOMINAL
+                        </label>
+                        <input class="wide-control form-control default" type="text" id="nominal">
+                        </input>
+                    </div>
+                    <button class="btn widget uib_w_3 d-margins btn-lg btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" onclick="kirim_permintaan()">
+                        KIRIM PERMINTAAN
+                    </button>
+
+                    <div class="upage-content ac0 content-area vertical-col left" id="konten" style="overflow-y: auto">
+                       <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3">Mengambil Data ...</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

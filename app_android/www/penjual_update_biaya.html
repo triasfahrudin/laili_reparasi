@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link class="main-less" href="css/penarikan_dana_main.less.css" rel="stylesheet" type="text/css">
+                <meta charset="utf-8">
+                    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" name="viewport">
+                        <script src="intelxdk.js"></script>
+                        <script src="cordova.js"></script>
+                        <script src="js/app.js"></script>
+                        <script src="xhr.js"></script>
+                        <script src="xdk/init-dev.js"></script>
+                        <script src="lib/jquery.min.js" type="application/javascript"></script>
+                        <script src="marginal/marginal-position.min.js" type="application/javascript"></script>
+
+
+                        <script type="text/javascript">
+                           function kirim_permintaan() {
+
+                              $.post(rootWebService + "/transaksi_update_status", {
+                                    transaksi_id : localStorage.getItem('trans_id_update_biaya'),
+                                    status : 'PENJUAL_UPDATE_BIAYA',
+                                    nominal : $('#nominal').val()
+                                  }, 'json')
+                                  .done(function (data) {
+                                      // $('#success_div').show();   
+                                      window.location = "penjual_order_pending.html";                                
+                                  }); 
+                            }
+
+
+                                                 
+
+                          
+                        </script>
+                    </meta>
+                </meta>
+            </link>
+        </link>
+    </head>
+    <body>
+        <div class="upage" id="mainpage">
+            <div class="upage-outer">
+                <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                    <h2>
+                        BIAYA PERBAIKAN
+                    </h2>
+                    <div class="widget-container wrapping-col single-centered">
+                    </div>
+                    <div class="widget-container content-area horiz-area wrapping-col left">
+                        <button class="btn widget uib_w_3 d-margins btn-xs btn-success" data-uib="twitter%20bootstrap/button" data-ver="1" id="back" onclick="window.location='penjual_order_pending.html'">
+                            <i class="glyphicon glyphicon-arrow-left" data-position="icon only">
+                            </i>
+                        </button>
+                    </div>
+                    <div class="widget-container content-area horiz-area wrapping-col right">
+                    </div>
+                </div>
+                <div class="upage-content ac0 content-area vertical-col left">
+                    <div class="alert alert-success" style="display: none;" id="success_div">
+                      <strong>Berhasil!</strong> 
+                      <br>Biaya berhasil disimpan.                      
+                    </div>
+
+
+                    <div class="table-thing widget uib_w_2 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                        <label class="narrow-control label-inline">
+                            BIAYA PERBAIKAN
+                        </label>
+                        <input class="wide-control form-control default" type="text" id="nominal">
+                        </input>
+                    </div>
+                    <button class="btn widget uib_w_3 d-margins btn-lg btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" onclick="kirim_permintaan()">
+                        KIRIM NILAI BIAYA
+                    </button>
+
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
