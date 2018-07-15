@@ -23,26 +23,41 @@
             window.location = "chat.html";      
          }
 
-         function terima(trans_id){
+         function terima_biaya_ditawarkan(trans_id){
             //terima dan menunggu pembayaran
             $.post(rootWebService + "/transaksi_update_status",{
                 transaksi_id : trans_id,
-                status : 'BIAYA_DITERIMA_PEMBELI'
+                status : 'PELANGGAN_SETUJU_BIAYA'
             },'json').done(function (data){              
               window.location = "pelanggan_transaksi.html";
             })            
          }
 
-         function tolak(trans_id){
+
+         function barang_diterima(trans_id){
+              $.post(rootWebService + "/transaksi_update_status",{
+                transaksi_id : trans_id,
+                status : 'BARANG_DITERIMA_PELANGGAN'
+            },'json').done(function (data){              
+              window.location = "pelanggan_transaksi.html";
+            })            
+         }
+
+         function tolak_biaya_ditawarkan(trans_id){
             // localStorage.setItem('aksi_transaksi_id',transaksi_id);
 
             $.post(rootWebService + "/transaksi_update_status",{
                 transaksi_id : trans_id,
-                status : 'BIAYA_DITOLAK_PEMBELI'
+                status : 'PELANGGAN_TOLAK_BIAYA'
             },'json').done(function (data){
               window.location = "pelanggan_transaksi.html";
             })
             
+         }
+
+         function bukti_bayar(trans_id){
+           localStorage.setItem('trans_id_bukti_bayar',trans_id);
+           window.location = "upload_bukti_bayar.html";
          }
 
          function get_transaksi(status_transaksi) {
@@ -61,7 +76,7 @@
 
                     $.each(data, function (index, returnData) {
 
-                        if(returnData.status === 'PENDING'){
+                        if(returnData.status === 'MENUNGGU_TANGGAPAN_PENJUAL'){
                              konten_trans_menunggu += 
                                 '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
                                 '    <h4>Order #' + returnData.id + '</h4>' + 
@@ -70,15 +85,14 @@
                                 '    <!--<p style="margin: 1px;">Biaya disepakati : ' + (returnData.biaya_disepakati == 0 ? 'belum ditentukan' : returnData.biaya_disepakati) +'</p>-->' +
                                 '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
                                 '    <p>Status : <span class="label label-default">MENUNGGU_TANGGAPAN_PENJUAL</span></p>' +
-                                '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>';
-                                '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>';
-                                '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>';    
+                                '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
+                                '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
                                 '    <p style="margin: 1px;"><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
                                 '</div>';  
-                        }else if(returnData.status === 'MENUNGGU_PEMBAYARAN'){
+                        }else if(returnData.status === 'PENJUAL_TERIMA_KERJA' || returnData.status === 'MENUNGGU_TANGGAPAN_PEMBELI'){
 
-                              if(returnData.verifikasi_bukti_bayar === 'PENDING'){
-                                 konten_trans_menunggu += 
+                              konten_trans_menunggu += 
                                     '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
                                     '    <h4>Order #' + returnData.id + '</h4>' + 
                                     '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
@@ -87,22 +101,138 @@
                                     '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
                                     '    <p>Status : <span class="label label-warning">MENUNGGU_TANGGAPAN_PEMBELI</span></p>' +
                                     '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                    '    <!--<p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>-->' +
+                                    '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-warning btn-xs" onClick="terima_biaya_ditawarkan(' + returnData.id +')">TERIMA BIAYA</button>&nbsp;&nbsp;' + 
+                                    '            <button type="button" class="btn btn-danger btn-xs" onClick="tolak_biaya_ditawarkan(' + returnData.id +')">TOLAK BIAYA</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
+                              
+                        }else if(returnData.status === 'PELANGGAN_SETUJU_BIAYA'){
+
+                              
+                              konten_trans_menunggu += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-warning">MENUNGGU_PEMBAYARAN</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                    '    <!--<p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
+                                    '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-warning btn-xs" onClick="bukti_bayar(' + returnData.id +')">KIRIM BUKTI BAYAR</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
+                              
+                        }else if(returnData.status === 'PELANGGAN_UPLOAD_BUKTI'){
+
+                              
+                              konten_trans_menunggu += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-warning">MENUNGGU_VALIDASI_PEMBAYARAN</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
                                     '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                     '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
-                                    '            <button type="button" class="btn btn-warning btn-xs" onClick="terima(' + returnData.id +')">TERIMA</button>&nbsp;&nbsp;' + 
-                                    '            <button type="button" class="btn btn-danger btn-xs" onClick="tolak(' + returnData.id +')">TOLAK</button>' + 
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
                                     '   </p>' +
                                     '</div>';  
-                              }else if(returnData.verifikasi_bukti_bayar === 'VALID'){
+                              
+                        }else if(returnData.status === 'BUKTI_VALID' || returnData.status === 'DALAM_PROSES'){
 
-                              }else{
 
+                              konten_trans_proses += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-warning">REPARASI_DALAM_PROSES</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>';
+
+                              if(returnData.status === 'DALAM_PROSES'){
+                                konten_trans_proses += '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>';
                               }
 
+                              konten_trans_proses +=                                            
+                                    '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
+                              
+                        }else if(returnData.status === 'PROSES_SELESAI' ){
+
+                              
+                              konten_trans_proses += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-warning">REPARASI_SELESAI</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
+                                    '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-warning btn-xs" onClick="barang_diterima(' + returnData.id +')">BARANG DITERIMA</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
+                              
+                        }else if(returnData.status === 'BARANG_DITERIMA_PELANGGAN' ){
+
+                              
+                              konten_trans_selesai += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-warning">BARANG_DITERIMA_PELANGGAN</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
+                                    '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
+                              
+                        }else if(returnData.status === 'PELANGGAN_TOLAK_BIAYA' || returnData.status ==='PENJUAL_TOLAK_KERJA' ){
+
+                              
+                              konten_trans_selesai += 
+                                    '<div style="margin-left: 10px;padding:5px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
+                                    '    <h4>Order #' + returnData.id + '</h4>' + 
+                                    '    <p style="margin: 1px;">Reparator : ' + returnData.nama_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Telp : ' + returnData.telp_penjual_jasa + '</p>' +
+                                    '    <p style="margin: 1px;">Biaya ditawarkan : ' + returnData.biaya_disepakati  +'</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Order : ' + returnData.tgl_transaksi + '</p>' +
+                                    '    <p>Status : <span class="label label-danger">PELANGGAN_TOLAK_BIAYA ATAU PENJUAL_TOLAK_KERJA</span></p>' +
+                                    '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
+                                    '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
+                                    '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>' +    
+                                    '    <p>' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '   </p>' +
+                                    '</div>';  
                               
                         }
+
 
 
                         if(i <= 5){

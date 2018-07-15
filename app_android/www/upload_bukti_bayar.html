@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/profile_pelanggan_main.less.css" class="main-less">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <script src="intelxdk.js"></script>
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="xhr.js"></script>
+    <script src="xdk/init-dev.js"></script>
+    <script type="application/javascript" src="lib/jquery.min.js"></script>
+    <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+
+    <style type="text/css">
+      #pac-input {
+         background-color: #fff;
+         font-family: Roboto;
+         font-size: 15px;
+         font-weight: 300;
+         margin-left: 12px;
+         padding: 0 11px 0 13px;
+         text-overflow: ellipsis;
+         width: 400px;
+       }
+       #pac-input:focus {
+       border-color: #4d90fe;
+       }
+    </style>
+</head>
+
+<body>
+    <div class="upage" id="mainpage">
+        <div class="upage-outer">
+            <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                <h2>DATA PEMBAYARAN</h2>
+                <div class="widget-container wrapping-col single-centered"></div>
+                <div class="widget-container content-area horiz-area wrapping-col left">
+                  <button onclick="window.location = 'pelanggan_transaksi.html';" class="btn widget uib_w_2 d-margins btn-xs btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="route_back_btn"><i class="glyphicon glyphicon-chevron-left" data-position="icon only"></i>
+                    </button>
+                </div>
+                <div class="widget-container content-area horiz-area wrapping-col right"></div>
+            </div>
+            <div class="upage-content ac0 content-area vertical-col left">
+
+                <div class="alert alert-success" style="display: none;" id="success_div">
+                      <strong>Berhasil!</strong> 
+                      <br>Data pembayaran berhasil dikirimkan.                      
+                    </div>
+
+                <div class="table-thing widget uib_w_5 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Nama Penyetor</label>
+                    <input class="update_me wide-control form-control default" type="text" id="nama_penyetor" >
+                </div>
+                <div class="table-thing widget uib_w_2 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Nominal</label>
+                    <input class="update_me wide-control form-control default" type="text" id="nominal">
+                </div>
+                <div class="table-thing widget uib_w_3 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Tanggal</label>
+                    <input class="update_me wide-control form-control default" type="text" id="tanggal">
+                </div>
+                
+                <button class="btn widget uib_w_3 d-margins btn-lg btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" onclick="kirim_bukti()">
+                   KIRIM DATA BAYAR
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+      function kirim_bukti() {
+
+          $.post(rootWebService + "/kirim_bukti_bayar", {
+                transaksi_id : localStorage.getItem('trans_id_bukti_bayar'),
+                nominal : $('#nominal').val(),
+                nama_penyetor : $('#nama_penyetor').val(),
+                tanggal : $('#tanggal').val()
+              }, 'json')
+              .done(function (data) {
+                  $('#success_div').show();                                   
+              });
+      }
+
+    </script>
+</body>
+
+</html>

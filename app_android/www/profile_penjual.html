@@ -196,6 +196,8 @@
                 $('#nama').val(data.nama);
                 $('#alamat').val(data.alamat);
                 $('#telp').val(data.telp);
+                $('#bank').val(data.bank);
+                $('#rekening_bank').val(data.rekening_bank);
 
                 localStorage.setItem('user_latitude', data.latitude);
                 localStorage.setItem('user_longitude', data.longitude);
@@ -257,6 +259,14 @@
                 <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
                     <label class="narrow-control label-top-left">Telephon</label>
                     <input class="update_me wide-control form-control default" type="text" id="telp">
+                </div>
+                <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">BANK</label>
+                    <input class="update_me wide-control form-control default" type="text" id="bank">
+                </div>
+                <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">
+                    <label class="narrow-control label-top-left">Nomor Rekening</label>
+                    <input class="update_me wide-control form-control default" type="text" id="rekening_bank">
                 </div>
 
                 <div class="table-thing widget uib_w_4 d-margins" data-uib="twitter%20bootstrap/input" data-ver="1">

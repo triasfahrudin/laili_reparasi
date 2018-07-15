@@ -11,12 +11,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-
--- Dumping database structure for laili_reparasi
-DROP DATABASE IF EXISTS `laili_reparasi`;
-CREATE DATABASE IF NOT EXISTS `laili_reparasi` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `laili_reparasi`;
-
 -- Dumping structure for table laili_reparasi.ci_sessions
 DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE IF NOT EXISTS `ci_sessions` (
@@ -28,27 +22,11 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
   KEY `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.ci_sessions: ~16 rows (approximately)
+-- Dumping data for table laili_reparasi.ci_sessions: ~1 rows (approximately)
 DELETE FROM `ci_sessions`;
 /*!40000 ALTER TABLE `ci_sessions` DISABLE KEYS */;
 INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-	('46be761ipfdignpd993uffk24g7g9a10', '127.0.0.1', 1525761010, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532353735383331363B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('89oupmnjr6elcu4rqfods5hq7g80glcl', '127.0.0.1', 1520559569, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532303535393534303B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('8utd3795j6p4r6pckb0dlimppoqoablq', '127.0.0.1', 1521871907, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532313837303430313B),
-	('aimcpgab20plut4gvs2u1dp8f30jc5eb', '127.0.0.1', 1520559586, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532303535393538363B),
-	('bk63ofsi1mvrep22cfk4su2j738p3fc8', '127.0.0.1', 1520387229, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532303336363732373B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('clo2p0h143looumou4bv710c9unkef61', '::1', 1519653246, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313531393634393532373B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('e2u0td1sp3s5sjtd87bsp2p0jb5iciif', '127.0.0.1', 1530847085, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533303736323432353B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('i35uavsa2nbm6p6j5gbc9f6jg6n9vici', '127.0.0.1', 1522221183, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532323232303538373B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('j0br12k2argoi9mb5rk64kirhk2v4d94', '127.0.0.1', 1519909022, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313531393930393032323B),
-	('lecr3f3hfa6kg50trpd3m0f2rr64cjok', '127.0.0.1', 1519783192, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313531393738333131333B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('luaniam0kul3t1hroqq6r40nsgajj3gd', '127.0.0.1', 1526277855, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532363236313535303B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('npgaptuq9fadskr8pnp5bpdc3mdsd2ir', '::1', 1525329303, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532353331333531313B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('pmj16hittibqjaeu6os9ug1pp93h797p', '127.0.0.1', 1519783319, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313531393738333331393B),
-	('qf4vsk1kh5i7en5u0nltnfhuso6vsp4v', '127.0.0.1', 1526005590, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532363030353539303B),
-	('tnsgakusam9tfb4727b28oqlp4e35udm', '127.0.0.1', 1530944159, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533303934303835303B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
-	('tpkp4ile4df1hr66o5h9m1lbnfldrlv4', '127.0.0.1', 1520367016, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532303336373031363B),
-	('vo9fgvv8v177omjc3h8qut3d4t8ntau7', '127.0.0.1', 1522031016, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313532323033313030383B);
+	('a6u001qs4e9k5b5t3rvt55ej4qm62kpt', '127.0.0.1', 1531583820, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533313535353632333B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B);
 /*!40000 ALTER TABLE `ci_sessions` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.dompetku
@@ -62,19 +40,11 @@ CREATE TABLE IF NOT EXISTS `dompetku` (
   `keterangan` varchar(150) NOT NULL,
   `tanggal` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.dompetku: ~4 rows (approximately)
+-- Dumping data for table laili_reparasi.dompetku: ~0 rows (approximately)
 DELETE FROM `dompetku`;
 /*!40000 ALTER TABLE `dompetku` DISABLE KEYS */;
-INSERT INTO `dompetku` (`id`, `jenis`, `penjual_jasa_id`, `nominal`, `saldo_akhir`, `keterangan`, `tanggal`) VALUES
-	(1, 'dana_masuk', 3, 100000, 100000, '', '2018-07-05 07:15:27'),
-	(2, 'dana_keluar', 3, 25000, 75000, '', '2018-07-05 07:15:27'),
-	(3, 'dana_masuk', 3, 500000, 575000, '', '2018-07-05 07:16:18'),
-	(5, 'dana_masuk', 3, 25000, 600000, 'Dana Masuk dari TRANSAKSI #6', '2018-07-05 07:19:42'),
-	(6, 'dana_keluar', 3, 150000, 450000, 'DANA KELUAR REQUEST #1', '2018-07-05 08:37:19'),
-	(7, 'dana_keluar', 3, 150000, 300000, 'DANA KELUAR REQUEST #1', '2018-07-05 11:22:28'),
-	(8, 'dana_keluar', 3, 300000, 0, 'DANA KELUAR REQUEST #5', '2018-07-06 09:58:19');
 /*!40000 ALTER TABLE `dompetku` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.kabupaten
@@ -90332,46 +90302,11 @@ CREATE TABLE IF NOT EXISTS `percakapan` (
   `penjual_id` int(11) NOT NULL,
   `pengirim` enum('pelanggan','penjual') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.percakapan: ~29 rows (approximately)
+-- Dumping data for table laili_reparasi.percakapan: ~0 rows (approximately)
 DELETE FROM `percakapan`;
 /*!40000 ALTER TABLE `percakapan` DISABLE KEYS */;
-INSERT INTO `percakapan` (`id`, `tgl`, `pesan`, `foto`, `pelanggan_id`, `penjual_id`, `pengirim`) VALUES
-	(1, '2018-05-29 11:35:10', 'hallo', '', 1, 3, 'pelanggan'),
-	(2, '2018-05-29 11:39:07', 'hallo', '', 1, 3, 'penjual'),
-	(3, '2018-05-29 12:43:23', 'test', '', 1, 3, 'pelanggan'),
-	(4, '2018-05-29 12:43:53', 'test', '', 1, 3, 'pelanggan'),
-	(5, '2018-05-29 12:44:28', 'testxxx', '', 1, 3, 'pelanggan'),
-	(6, '2018-05-29 12:44:56', 'return', '', 1, 3, 'pelanggan'),
-	(7, '2018-05-29 12:46:03', 'return', '', 1, 3, 'pelanggan'),
-	(9, '2018-05-29 12:48:03', 'vvv', '', 1, 3, 'pelanggan'),
-	(10, '2018-05-29 12:48:06', 'lala', '', 1, 3, 'pelanggan'),
-	(11, '2018-05-29 12:48:28', 'lolita', '', 1, 3, 'pelanggan'),
-	(12, '2018-05-29 12:48:36', 'tralala trilili', '', 1, 3, 'pelanggan'),
-	(13, '2018-05-29 12:55:17', 'lala', '', 1, 3, 'pelanggan'),
-	(14, '2018-05-29 12:58:01', '0000000000', '', 1, 3, 'penjual'),
-	(15, '2018-05-29 13:05:51', 'hohoho', '', 1, 3, 'pelanggan'),
-	(16, '2018-05-29 13:05:51', 'hohoho', '', 1, 3, 'pelanggan'),
-	(17, '2018-05-29 13:05:51', 'hohoho', '', 1, 3, 'pelanggan'),
-	(18, '2018-05-29 13:08:10', 'hohoho', '', 1, 3, 'penjual'),
-	(19, '2018-05-29 13:08:27', 'wowowowo', '', 1, 3, 'pelanggan'),
-	(20, '2018-05-29 13:10:57', 'wiwiwiw', '', 1, 3, 'pelanggan'),
-	(21, '2018-05-29 13:11:17', 'ya begitu deh', '', 1, 3, 'pelanggan'),
-	(22, '2018-05-29 13:45:46', 'loli', '', 1, 3, 'pelanggan'),
-	(23, '2018-05-29 13:56:58', 'test', '', 1, 4, 'pelanggan'),
-	(24, '2018-05-29 13:57:13', 'ggggg', '', 1, 4, 'penjual'),
-	(25, '2018-05-29 13:58:27', 'test', '', 1, 4, 'pelanggan'),
-	(26, '2018-05-29 14:00:28', 'fff', '', 1, 4, 'penjual'),
-	(27, '2018-05-29 14:01:14', 'hhhh', '', 1, 4, 'penjual'),
-	(28, '2018-05-29 14:01:38', 'loliota', '', 1, 4, 'pelanggan'),
-	(29, '2018-05-29 14:02:06', 'kala', '', 1, 4, 'pelanggan'),
-	(30, '2018-05-29 14:02:18', 'kkk', '', 1, 4, 'pelanggan'),
-	(31, '2018-05-30 04:47:32', 'lila', '', 1, 3, 'pelanggan'),
-	(32, '2018-05-30 08:24:30', 'dul dil dung', '', 1, 3, 'pelanggan'),
-	(33, '2018-05-30 12:11:37', 'test', '', 1, 3, 'penjual'),
-	(34, '2018-05-30 14:06:31', 'xxxx', '', 1, 3, 'pelanggan'),
-	(35, '2018-05-30 14:07:50', 'yyyyy', '', 1, 3, 'penjual');
 /*!40000 ALTER TABLE `percakapan` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.provinsi
@@ -90432,17 +90367,11 @@ CREATE TABLE IF NOT EXISTS `request_dana_keluar` (
   `tanggal_request` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `tanggal_bayar` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.request_dana_keluar: ~5 rows (approximately)
+-- Dumping data for table laili_reparasi.request_dana_keluar: ~0 rows (approximately)
 DELETE FROM `request_dana_keluar`;
 /*!40000 ALTER TABLE `request_dana_keluar` DISABLE KEYS */;
-INSERT INTO `request_dana_keluar` (`id`, `penjual_jasa_id`, `nominal`, `status`, `tanggal_request`, `tanggal_bayar`) VALUES
-	(1, 3, 150000, 'dibayar', '2018-07-05 11:22:28', '2018-07-06 06:44:39'),
-	(2, 4, 50000, 'pending', '2018-07-05 11:41:04', '2018-07-06 06:44:39'),
-	(3, 3, 50000, 'ditolak', '2018-07-05 11:42:23', '2018-07-06 06:44:39'),
-	(4, 3, 12000, 'pending', '2018-07-06 09:33:20', NULL),
-	(5, 3, 300000, 'dibayar', '2018-07-06 09:34:39', '2018-07-06 09:58:19');
 /*!40000 ALTER TABLE `request_dana_keluar` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.settings
@@ -90470,12 +90399,12 @@ CREATE TABLE IF NOT EXISTS `transaksi` (
   `pelanggan_id` int(11) NOT NULL,
   `penjual_jasa_id` int(11) NOT NULL,
   `kategori_jasa_id` int(11) NOT NULL,
-  `status` enum('PENDING','DALAM_PROSES','SELESAI','TOLAK') NOT NULL DEFAULT 'PENDING',
+  `status` enum('MENUNGGU_TANGGAPAN_PENJUAL','PENJUAL_TERIMA_KERJA','PENJUAL_TOLAK_KERJA','MENUNGGU_TANGGAPAN_PEMBELI','PELANGGAN_SETUJU_BIAYA','PELANGGAN_TOLAK_BIAYA','PELANGGAN_UPLOAD_BUKTI','BUKTI_VALID','BUKTI_TIDAK_VALID','DALAM_PROSES','PROSES_SELESAI','BARANG_DITERIMA_PELANGGAN') NOT NULL DEFAULT 'MENUNGGU_TANGGAPAN_PENJUAL',
   `biaya_disepakati` double NOT NULL,
   `tgl_transaksi` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `tgl_diproses` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `tgl_selesai` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `bukti_bayar` varchar(50) NOT NULL,
+  `bukti_bayar` text NOT NULL,
   `verifikasi_bukti_bayar` enum('PENDING','VALID','INVALID') NOT NULL DEFAULT 'PENDING',
   `catatan_verifikasi` varchar(50) NOT NULL,
   `catatan_pelanggan` text NOT NULL,
@@ -90483,18 +90412,11 @@ CREATE TABLE IF NOT EXISTS `transaksi` (
   `catatan_rating` text NOT NULL,
   `catatan_penjual_jasa` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='catatan_pelanggan    => berisi tentang catatan pelanggan tentang kondisi barangnya, kerusakannya, hal-hal yang bisa digunakan penjual jasa untuk perkiraan kerusakan\r\ncatatan_penjual_jasa => berisi tentang catatan penjual jasa tentang kerusakan barang setelah melihat langsung. ';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='catatan_pelanggan    => berisi tentang catatan pelanggan tentang kondisi barangnya, kerusakannya, hal-hal yang bisa digunakan penjual jasa untuk perkiraan kerusakan\r\ncatatan_penjual_jasa => berisi tentang catatan penjual jasa tentang kerusakan barang setelah melihat langsung. ';
 
--- Dumping data for table laili_reparasi.transaksi: ~5 rows (approximately)
+-- Dumping data for table laili_reparasi.transaksi: ~0 rows (approximately)
 DELETE FROM `transaksi`;
 /*!40000 ALTER TABLE `transaksi` DISABLE KEYS */;
-INSERT INTO `transaksi` (`id`, `pelanggan_id`, `penjual_jasa_id`, `kategori_jasa_id`, `status`, `biaya_disepakati`, `tgl_transaksi`, `tgl_diproses`, `tgl_selesai`, `bukti_bayar`, `verifikasi_bukti_bayar`, `catatan_verifikasi`, `catatan_pelanggan`, `rating_pelanggan`, `catatan_rating`, `catatan_penjual_jasa`) VALUES
-	(1, 1, 3, 1, 'DALAM_PROSES', 0, '2018-02-27 09:18:37', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', '', 0, '', ''),
-	(2, 1, 3, 1, 'SELESAI', 100000, '2018-05-30 06:21:20', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'test ajah', 0, '', ''),
-	(3, 1, 3, 2, 'SELESAI', 250000, '2018-05-30 06:26:07', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'test ajah', 0, '', ''),
-	(4, 1, 3, 1, 'SELESAI', 100000, '2018-05-30 14:06:40', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxxx', 0, '', ''),
-	(5, 1, 3, 1, 'SELESAI', 500000, '2018-05-30 14:06:40', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxxx', 0, '', ''),
-	(6, 1, 3, 1, 'SELESAI', 25000, '2018-06-05 09:25:45', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', 'xxxxxxxxxxxxx', 0, '', '');
 /*!40000 ALTER TABLE `transaksi` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.user
@@ -90535,7 +90457,7 @@ DROP TRIGGER IF EXISTS `transaksi_after_update`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `transaksi_after_update` AFTER UPDATE ON `transaksi` FOR EACH ROW BEGIN
-   IF(NEW.status = 'SELESAI') THEN
+   IF(NEW.status = 'BARANG_DITERIMA_PELANGGAN') THEN
       SET @saldo_akhir = (SELECT IFNULL(saldo_akhir,0) FROM dompetku WHERE penjual_jasa_id = NEW.penjual_jasa_id ORDER BY id DESC LIMIT 1);
 		
 		INSERT INTO dompetku(jenis,penjual_jasa_id,nominal, saldo_akhir,keterangan) 

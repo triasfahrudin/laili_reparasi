@@ -120,7 +120,7 @@
             $.post(rootWebService + "/order_jasa", {
                 pelanggan_id      : localStorage.getItem('user_id'),
                 penjual_jasa_id   : localStorage.getItem('order_penjual_id'),
-                status            : 'PENDING',
+                status            : 'MENUNGGU_TANGGAPAN_PENJUAL',
                 catatan_pelanggan : txtKerusakan,
                 kategori_jasa_id  : intKategoriJasa,
                 email             : txtEmail

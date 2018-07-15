@@ -41,7 +41,7 @@
             //terima dan menunggu pembayaran
             $.post(rootWebService + "/transaksi_update_status",{
                 transaksi_id : trans_id,
-                status : 'TRANSAKSI_DITERIMA_PENJUAL'
+                status : 'PENJUAL_TERIMA_KERJA'
             },'json').done(function (data){
               localStorage.setItem("trans_id_update_biaya",trans_id);
               window.location = "penjual_update_biaya.html";
@@ -53,9 +53,22 @@
 
             $.post(rootWebService + "/transaksi_update_status",{
                 transaksi_id : trans_id,
-                status : 'TRANSAKSI_DITOLAK_PENJUAL'
+                status : 'PENJUAL_TOLAK_KERJA'
             },'json').done(function (data){
+              window.location = "penjual_order_pending.html";
+            })
+            
+         }
 
+
+         function proses(trans_id){
+            // localStorage.setItem('aksi_transaksi_id',transaksi_id);
+
+            $.post(rootWebService + "/transaksi_update_status",{
+                transaksi_id : trans_id,
+                status : 'DALAM_PROSES'
+            },'json').done(function (data){
+              window.location = "penjual_order_proses.html";
             })
             
          }
@@ -80,7 +93,7 @@
 
                         $.each(data, function (index, returnData) {
                        
-                          if(returnData.status === 'PENDING'){
+                          if(returnData.status === 'MENUNGGU_TANGGAPAN_PENJUAL'){
                             konten += 
                             '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="item_' + returnData.id + '">' + 
                             '    <h4>Transaksi #' + returnData.id + '</h4>' +
@@ -88,7 +101,7 @@
                             '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
                             '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
                             '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
-                            '    <p>Status : <span class="label label-default">PENDING</span></p>' +
+                            '    <p>Status : <span class="label label-default">MENUNGGU_TANGGAPAN_PENJUAL</span></p>' +
                             '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' + 
@@ -98,7 +111,7 @@
                             '    </p>' +
                             '</div>';
 
-                          }else if(returnData.status === 'MENUNGGU_PEMBAYARAN'){
+                          }else if(returnData.status === 'MENUNGGU_TANGGAPAN_PEMBELI'){
                             konten += 
                             '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="item_' + returnData.id + '">' + 
                             '    <h4>Transaksi #' + returnData.id + '</h4>' +
@@ -107,13 +120,57 @@
                             '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
                             '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
                             '    <p>Biaya ditawarkan : ' + returnData.biaya_disepakati + '</p>' +
-                            '    <p>Status : <span class="label label-warning">MENUNGGU_PEMBAYARAN</span></p>' +
+                            '    <p>Status : <span class="label label-warning">MENUNGGU_TANGGAPAN_PEMBELI</span></p>' +
                             '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' + 
                             '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' + 
                             '       <!--<button type="button" class="btn btn-warning btn-xs" onClick="terima(' + returnData.id +')">TERIMA</button>' + 
                             '       <button type="button" class="btn btn-danger btn-xs" onClick="tolak(' + returnData.id +')">TOLAK</button>-->' + 
+                            '    </p>' +
+                            '</div>';
+
+                          }else if(returnData.status === 'PELANGGAN_SETUJU_BIAYA' || returnData.status === 'PELANGGAN_UPLOAD_BUKTI' ){
+                            
+                            konten += 
+                            '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="item_' + returnData.id + '">' + 
+                            '    <h4>Transaksi #' + returnData.id + '</h4>' +
+                            '    <p>Nama : ' + returnData.nama_pelanggan + '</p>' + 
+                            '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
+                            '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
+                            '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
+                            '    <p>Biaya ditawarkan : ' + returnData.biaya_disepakati + '</p>';
+                            if(returnData.status === 'PELANGGAN_UPLOAD_BUKTI'){
+                              konten += '    <p>Status : <span class="label label-warning">MENUNGGU_VALIDASI_PEMBAYARAN</span></p>';
+                            }else{
+                              konten += '    <p>Status : <span class="label label-warning">PELANGGAN_SETUJU_BIAYA</span></p>';
+                            }
+                            
+                            konten +=
+                            '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
+                            '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' + 
+                            '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' + 
+                            '       <!--<button type="button" class="btn btn-warning btn-xs" onClick="terima(' + returnData.id +')">TERIMA</button>' + 
+                            '       <button type="button" class="btn btn-danger btn-xs" onClick="tolak(' + returnData.id +')">TOLAK</button>-->' + 
+                            '    </p>' +
+                            '</div>';
+
+                          }else if(returnData.status === 'BUKTI_VALID' ){
+                            konten += 
+                            '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="item_' + returnData.id + '">' + 
+                            '    <h4>Transaksi #' + returnData.id + '</h4>' +
+                            '    <p>Nama : ' + returnData.nama_pelanggan + '</p>' + 
+                            '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
+                            '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
+                            '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
+                            '    <p>Biaya ditawarkan : ' + returnData.biaya_disepakati + '</p>' +
+                            '    <p>Status : <span class="label label-warning">BUKTI_VALID</span></p>' +
+                            '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
+                            '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' + 
+                            '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' + 
+                            '       <button type="button" class="btn btn-warning btn-xs" onClick="proses(' + returnData.id +')">PROSES</button>' + 
                             '    </p>' +
                             '</div>';
 
@@ -164,8 +221,8 @@
                
 
                <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3">
-                  <h4>Cross-browser compatibility</h4> 
-                  <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p>
+                  <h4>Mengambil Data...</h4> 
+                  <p>Mohon menunggu sementara kami mengambil data dari server</p>
                </div>
             </div>
 

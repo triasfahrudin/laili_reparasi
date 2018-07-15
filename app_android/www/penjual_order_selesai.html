@@ -58,7 +58,7 @@
                           //   border = "border-merah"
                           // } 
 
-                          if(returnData.status === 'TOLAK'){
+                          if(returnData.status === 'PELANGGAN_TOLAK_BIAYA'){
                             konten += 
                             '<div style="margin-left: 10px" class="bs-callout border: 1px solid #eee;"  id="callout-progress-animation-css3">' + 
                             '    <h4>Transaksi #' + returnData.id + '</h4>' +
@@ -66,14 +66,14 @@
                             '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
                             '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
                             '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
-                            '    <p>Status : <span class="label label-danger">DI TOLAK</span></p>' +
+                            '    <p>Status : <span class="label label-danger">PELANGGAN_TOLAK_BIAYA</span></p>' +
                             '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <!--<p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
                             '    <p>Tanggal Selesai : ' + returnData.tanggal_selesai + '</p>-->' +
                             '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button></p>' +
                             '</div>';  
-                          }else if(returnData.status === 'SELESAI'){
+                          }else if(returnData.status === 'PENJUAL_TOLAK_KERJA'){
                             konten += 
                             '<div style="margin-left: 10px" class="bs-callout border: 1px solid #eee;"  id="callout-progress-animation-css3">' + 
                             '    <h4>Transaksi #' + returnData.id + '</h4>' +
@@ -81,7 +81,22 @@
                             '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
                             '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
                             '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
-                            '    <p>Status : <span class="label label-success">SELESAI</span></p>' +
+                            '    <p>Status : <span class="label label-danger">PENJUAL_TOLAK_KERJA</span></p>' +
+                            '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
+                            '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
+                            '    <!--<p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
+                            '    <p>Tanggal Selesai : ' + returnData.tanggal_selesai + '</p>-->' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button></p>' +
+                            '</div>';  
+                          }else if(returnData.status === 'PROSES_SELESAI'){
+                            konten += 
+                            '<div style="margin-left: 10px" class="bs-callout border: 1px solid #eee;"  id="callout-progress-animation-css3">' + 
+                            '    <h4>Transaksi #' + returnData.id + '</h4>' +
+                            '    <p>Nama : ' + returnData.nama_pelanggan + '</p>' + 
+                            '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
+                            '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
+                            '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
+                            '    <p>Status : <span class="label label-success">PROSES_SELESAI</span></p>' +
                             '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
@@ -147,7 +162,10 @@
                </div>
             </div>
             <div class="upage-content ac0 content-area vertical-col left" id="konten">
-               <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3"> <h4>Cross-browser compatibility</h4> <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p> </div>
+               <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3"> 
+                <h4>Mengambil Data...</h4> 
+                <p>Mohon menunggu sementara kami mengambil data dari server</p>
+               </div>
             </div>  
             
          </div>

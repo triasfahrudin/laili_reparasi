@@ -32,7 +32,7 @@
             
             $.post(rootWebService + "/transaksi_update_status",{
                 transaksi_id : trans_id,
-                status : 'TRANSAKSI_SELESAI'
+                status : 'PROSES_SELESAI'
             },'json').done(function (data){
 
               window.location = "penjual_order_selesai.html";
@@ -40,18 +40,6 @@
             })
             
          }
-
-         function diproses(trans_id){
-            
-            $.post(rootWebService + "/transaksi_update_status",{
-                transaksi_id : trans_id,
-                status : 'TRANSAKSI_DIPROSES'
-            },'json').done(function (data){
-               window.location = "penjual_order_proses.html";
-            })
-            
-         }
-
 
          function getTransaksi() {
 
@@ -88,24 +76,7 @@
                               '       <button type="button" class="btn btn-danger btn-xs" onClick="selesai(' + returnData.id +')">SELESAI</button>' + 
                               '    </p>' +
                               '</div>';
-                          }else if(returnData.status === 'PEMBAYARAN_VALID'){
-
-                            konten += 
-                              '<div style="margin-left: 10px" class="bs-callout bs-callout-' + color_class[i] +'" id="callout-progress-animation-css3">' + 
-                              '    <h4>Transaksi #' + returnData.id + '</h4>' +
-                              '    <p>Nama : ' + returnData.nama_pelanggan + '</p>' + 
-                              '    <p>Alamat : ' + returnData.alamat_pelanggan + '</p>' +
-                              '    <p>Telp : ' + returnData.telp_pelanggan + '</p>' +
-                              '    <p>Jenis Order : ' + returnData.jenis_order + '</p>' +
-                              '    <p>Status : <span class="label label-info">PEMBAYARAN_TERVERIFIKASI</span></p>' +
-                              '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
-                              '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
-                              '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' +
-                              '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' +
-                              '       <button type="button" class="btn btn-warning btn-xs" onClick="diproses(' + returnData.id +')">DIPROSES</button>&nbsp;&nbsp;' + 
-                              '    </p>' +
-                              '</div>';
-                          } 
+                          }
 
 
                             if(i <= 5){
@@ -149,7 +120,10 @@
                </div>
             </div>
             <div class="upage-content ac0 content-area vertical-col left" id="konten">
-               <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3"> <h4>Cross-browser compatibility</h4> <p>Progress bars use CSS3 transitions and animations to achieve some of their effects. These features are not supported in Internet Explorer 9 and below or older versions of Firefox. Opera 12 does not support animations.</p> </div>
+               <div style="margin-left: 10px" class="bs-callout bs-callout-default" id="callout-progress-animation-css3"> 
+                <h4>Mengambil Data...</h4> 
+                <p>Mohon menunggu sementara kami mengambil data dari server</p>   
+               </div>
             </div>  
             
          </div>

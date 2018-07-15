@@ -363,6 +363,24 @@
          </div>
       </div>
 
+       <div id="modalDetailPembayaran" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Detail Transaksi</h4>
+               </div>
+               <div class="modal-body" id="detail_pembayaran">
+                  
+               </div>
+               <!-- <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               </div> -->
+            </div>
+         </div>
+      </div>
+
       <style type="text/css">
          .modal-backdrop { z-index: -1;}
       </style>
@@ -463,9 +481,62 @@
 
                 $('#detail_transaksi').html(konten);
 
-                $('#modalDetailTransaksi').modal();  
+                $('#modalDetailTransaksi').modal();               
 
-               
+
+            });
+            
+          }
+
+          function update_validasi_bayar(transaksi_id,status){
+            // alert(transaksi_id + ' ' + status);
+            
+            var jns_status = (status == 1 ? 'BUKTI_BAYAR_VALID' : 'BUKTI_BAYAR_TIDAK_VALID');
+
+            $.post("<?php echo site_url('webservice/transaksi_update_status')?>",{
+                transaksi_id : transaksi_id,
+                status : jns_status
+            }).done(function (data){
+              
+            })
+
+          }
+
+
+          function validasi_pembayaran(transaksi_id){
+            
+            $.post("<?php echo site_url('admin/detail_validasi_pembayaran');?>", {
+                transaksi_id: transaksi_id
+            }, 'json').done(function(data) {
+                
+                var konten = 
+                '<table class="table">' +
+                '   <tbody>' +
+                '     <tr>' +
+                '       <td>Nama Penyetor</td>' +
+                '       <td>' + data.nama_penyetor +'</td>' +
+                '     </tr>' +
+                '     <tr>' +
+                '       <td>Nominal</td>' +
+                '       <td>' + data.nominal +'</td>' +
+                '     </tr>' +      
+                '     <tr>' +
+                '       <td>Tanggal</td>' +
+                '       <td>' + data.tanggal +'</td>' +
+                '     </tr>' +   
+                '     <tr>' +
+                '       <td></td>' +
+                '       <td>' +
+                '           <button type="button" class="btn btn-success pull-right" style="margin-left:10px" onclick="update_validasi_bayar(' + data.transaksi_id + ',1)">Valid</button>' +
+                '           <button type="button" class="btn pull-right btn-danger" onclick="update_validasi_bayar(' + data.transaksi_id + ',0)">Tidak Valid</button>' +
+                '       </td>' +
+                '     </tr>' +                      
+                '   </tbody>' +
+                '</table>';
+
+                $('#detail_pembayaran').html(konten);
+
+                $('#modalDetailPembayaran').modal();                
 
 
             });
