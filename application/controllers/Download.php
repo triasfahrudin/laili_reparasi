@@ -17,8 +17,9 @@ class Download extends CI_Controller
     {
         //$this->session->sess_destroy();
         //redirect(site_url('signin'), 'reload');
-        $url = '<a href="' . site_url('uploads/order_reparasi-debug.apk') . '">Download APK</a><br>';
-        $url .= '<a href="' . site_url('uploads/order_reparasi-debug.apk') . '">Download Source Code</a><br>';
+        $url = '<a target="_BLANK" href="https://github.com/triasfahrudin/laili_reparasi">Download (cari kalimat "Clone or Download")</a><br>';
+
+        echo $url;
     }
 
 
