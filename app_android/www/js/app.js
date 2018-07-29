@@ -13,8 +13,8 @@
 // // ...event handler code here...
 // }
 // ...additional event handlers here...
-//var rootWebService = "https://laili-reparasi.000webhostapp.com/webservice";
- var rootWebService = "http://localhost/laili_reparasi/webservice";
+var rootWebService = "https://laili-reparasi.000webhostapp.com/webservice";
+// var rootWebService = "http://localhost/laili_reparasi/webservice";
 //var rootWebService = "http://192.168.127.1/laili_reparasi/webservice";//aku
 // var rootWebService = "http://192.168.113.1/laili_reparasi/webservice";//laili
 
