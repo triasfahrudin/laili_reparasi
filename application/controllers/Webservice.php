@@ -44,16 +44,36 @@ class Webservice extends CI_Controller
         $transaksi_id = $this->input->post('transaksi_id');
         $status       = $this->input->post('status');
 
+        $this->db->where('id', $transaksi_id);
+        $trans = $this->db->get('transaksi')->row_array();
+        $pelanggan_id = $trans['pelanggan_id'];
+        $penjual_id = $trans['penjual_jasa_id']; 
+
+        $pelanggan = $this->db->get_where('pelanggan',array('id' => $pelanggan_id));
+        $penjual = $this->db->get_where('penjual_jasa',array('id' => $penjual_id));
+ 
         if ($status === 'PENJUAL_TERIMA_KERJA') {
 
             $this->db->where('id', $transaksi_id);
             $this->db->update('transaksi', array('status' => 'PENJUAL_TERIMA_KERJA'));
+
+            if ($pelanggan->num_rows() > 0) {
+                $pj = $pelanggan->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Penyedia Jasa telah menyetujui transaksi order reparasai anda');
+            }
+
             echo json_encode(array('status' => 'OK'));
 
         } elseif ($status === 'PENJUAL_TOLAK_KERJA') {
 
             $this->db->where('id', $transaksi_id);
             $this->db->update('transaksi', array('status' => 'PENJUAL_TOLAK_KERJA'));
+
+            if ($pelanggan->num_rows() > 0) {
+                $pj = $pelanggan->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Penyedia Jasa telah MENOLAK transaksi order reparasai anda');
+            }
+
             echo json_encode(array('status' => 'OK'));
 
         } elseif ($status === 'PENJUAL_UPDATE_BIAYA') {
@@ -68,6 +88,11 @@ class Webservice extends CI_Controller
                 )
             );
 
+            if ($pelanggan->num_rows() > 0) {
+                $pj = $pelanggan->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Penyedia Jasa telah menawarkan biaya reparasi');
+            }
+
             echo json_encode(array('status' => 'OK'));
 
         } elseif ($status === 'DALAM_PROSES') {
@@ -80,6 +105,11 @@ class Webservice extends CI_Controller
                 )
             );
 
+            if ($pelanggan->num_rows() > 0) {
+                $pj = $pelanggan->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Penyedia Jasa mulai melakukan reparasi pada salah satu transaksi anda');
+            }
+
             echo json_encode(array('status' => 'OK'));
 
         } elseif ($status === 'PROSES_SELESAI') {
@@ -90,6 +120,11 @@ class Webservice extends CI_Controller
                     'status' => 'PROSES_SELESAI',
                 )
             );
+
+            if ($pelanggan->num_rows() > 0) {
+                $pj = $pelanggan->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Penyedia Jasa telah menyelesaikan reparasi');
+            }
 
             echo json_encode(array('status' => 'OK'));
 
@@ -103,6 +138,11 @@ class Webservice extends CI_Controller
                 )
             );
 
+            if ($penjual->num_rows() > 0) {
+                $pj = $penjual->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Pelanggan telah menyetujui biaya yang anda tawarkan');
+            }
+
             echo json_encode(array('status' => 'OK'));
         } elseif ($status === 'PELANGGAN_TOLAK_BIAYA') {
 
@@ -113,6 +153,12 @@ class Webservice extends CI_Controller
                     'tgl_selesai' => date("Y-m-d H:i:s"),
                 )
             );
+
+            if ($penjual->num_rows() > 0) {
+                $pj = $penjual->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Pelanggan telah MENOLAK biaya yang anda tawarkan');
+            }
+
 
             echo json_encode(array('status' => 'OK'));
         } elseif ($status === 'BARANG_DITERIMA_PELANGGAN') {
@@ -135,6 +181,12 @@ class Webservice extends CI_Controller
                     'status' => 'BUKTI_VALID',
                 )
             );
+
+            if ($penjual->num_rows() > 0) {
+                $pj = $penjual->row_array();
+                onesignal_send_msg($pj['device_id'], 'Transaksi anda berubah status', 'Sistem telah memvalidasi pembayaran transaksi');
+            }
+
 
             echo json_encode(array('status' => 'OK'));
 
@@ -957,7 +1009,8 @@ class Webservice extends CI_Controller
                  FROM penjual_jasa a
                  WHERE (a.kategori_jasa LIKE '$kategori_jasa_id,%'
                         OR a.kategori_jasa LIKE '%,$kategori_jasa_id,%'
-                        OR a.kategori_jasa LIKE '%,$kategori_jasa_id')
+                        OR a.kategori_jasa LIKE '%,$kategori_jasa_id'
+                        OR a.kategori_jasa = $kategori_jasa_id)
                 ");
 
         if ($qry->num_rows() > 0) {
