@@ -71,7 +71,7 @@
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <!--<p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
                             '    <p>Tanggal Selesai : ' + returnData.tanggal_selesai + '</p>-->' +
-                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button></p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">KIRIM PESAN</button></p>' +
                             '</div>';  
                           }else if(returnData.status === 'PENJUAL_TOLAK_KERJA'){
                             konten += 
@@ -86,7 +86,7 @@
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <!--<p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
                             '    <p>Tanggal Selesai : ' + returnData.tanggal_selesai + '</p>-->' +
-                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button></p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">KIRIM PESAN</button></p>' +
                             '</div>';  
                           }else if(returnData.status === 'PROSES_SELESAI'){
                             konten += 
@@ -101,7 +101,7 @@
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
                             '    <p>Tanggal Selesai : ' + returnData.tanggal_selesai + '</p>' +
-                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button></p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">KIRIM PESAN</button></p>' +
                             '</div>';  
                           }else if(returnData.status === 'BARANG_DITERIMA_PELANGGAN'){
                             konten += 
@@ -116,7 +116,7 @@
                             '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                             '    <p>Tanggal Proses : ' + returnData.tanggal_proses + '</p>' +
                             '    <p>Tanggal Selesai : ' + returnData.tanggal_selesai + '</p>' +
-                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button></p>' +
+                            '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">KIRIM PESAN</button></p>' +
                             '</div>';  
                           }
                           

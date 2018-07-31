@@ -44,6 +44,33 @@ class Admin extends CI_Controller
         $this->load->view('master.php', (array) $output);
     }
 
+
+    public function lihat_percakapan(){
+        header('content-type: application/json');
+
+        $trans_id  = $this->input->post('transaksi_id');
+
+        $this->db->where('trans_id', $trans_id);
+        $this->db->order_by("tgl", "ASC");
+        $rs_kat = $this->db->get("percakapan");
+
+        $kat = '[';
+
+        foreach ($rs_kat->result_array() as $r) {
+            $kat .= '{';
+            $kat .= '"id"   : "' . $r['id'] . '",';
+            $kat .= '"tgl" : "' . nicetime($r['tgl']) . '",';
+            $kat .= '"pesan" : "' . $r['pesan'] . '",';
+            $kat .= '"pengirim" : "' . $r['pengirim'] . '"';
+            $kat .= '},';
+        }
+
+        $kat = substr($kat, 0, -1);
+        $kat .= ']';
+
+        echo $kat;
+    }
+
     public function index()
     {
         $this->breadcrumbs->push('Dashboard', '/admin');
@@ -704,13 +731,13 @@ class Admin extends CI_Controller
             $crud->set_table('transaksi');
             $crud->set_subject('Data Transaksi');
 
-            $crud->columns('pelanggan_id', 'penjual_jasa_id', 'status', 'biaya_disepakati', 'detail');
+            $crud->columns('tgl_transaksi','pelanggan_id', 'penjual_jasa_id', 'status', 'biaya_disepakati', 'detail');
 
             $crud->set_relation('pelanggan_id', 'pelanggan', 'email');
             $crud->set_relation('penjual_jasa_id', 'penjual_jasa', 'nama');
 
             $crud->callback_column('detail', function ($value, $row) {
-                return '<a href="#" onclick="lihat_detail_transaksi(\'' . $row->id . '\')">Lihat</a>';
+                return '<a href="#" onclick="lihat_detail_transaksi(\'' . $row->id . '\')">Lihat</a>&nbsp;|&nbsp;<a href="#" onclick="lihat_percakapan(\'' . $row->id . '\')">Percakapan</a>';
             });
 
             // $crud->callback_column('percakapan', function ($value, $row) {
@@ -731,7 +758,7 @@ class Admin extends CI_Controller
             $crud->callback_column('status', function ($value, $row) {
                 if ($row->status === 'MENUNGGU_TANGGAPAN_PENJUAL' || $row->status === 'PENJUAL_TERIMA_KERJA' || $row->status === 'MENUNGGU_TANGGAPAN_PEMBELI' || $row->status === 'PELANGGAN_SETUJU_BIAYA') {
 
-                    return '<span class="label label-default">' . $row->status . '</span>';
+                    return '<span class="full-width label label-default">' . $row->status . '</span>';
 
                 } elseif ($row->status === 'PELANGGAN_UPLOAD_BUKTI' || $row->status === 'BUKTI_VALID' || $row->status === 'DALAM_PROSES') {
 
@@ -739,7 +766,7 @@ class Admin extends CI_Controller
                         //<a href="#" onclick="lihat_detail_transaksi(\'' . $row->id . '\')">Lihat</a>
                         return '<a href="#" onclick="validasi_pembayaran(\'' . $row->id . '\')" class="btn btn-warning">VALIDASI_PEMBAYARAN_DIPERLUKAN</a>';
                     } else {
-                        return '<span class="label label-warning">' . $row->status . '</span>';
+                        return '<span class="full-width label label-warning">' . $row->status . '</span>';
                     }
 
                 } elseif ($row->status === 'PROSES_SELESAI' || $row->status === 'BARANG_DITERIMA_PELANGGAN' || $row->status === 'BUKTI_VALID') {
@@ -748,7 +775,7 @@ class Admin extends CI_Controller
 
                 } elseif ($row->status === 'PENJUAL_TOLAK_KERJA' || $row->status === 'PELANGGAN_TOLAK_BIAYA' || $row->status === 'BUKTI_TIDAK_VALID') {
 
-                    return '<span class="label label-danger">' . $row->status . '</span>';
+                    return '<span class="full-width label label-danger">' . $row->status . '</span>';
 
                 }
 

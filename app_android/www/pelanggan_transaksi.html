@@ -18,8 +18,9 @@
       <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
       <script type="application/javascript" src="bootstrap/js/bootstrap.min.js"></script>
       <script type="text/javascript">
-         function msg(penjual_id){
+         function msg(penjual_id,trans_id){
             localStorage.setItem('msg_penjual_id',penjual_id);
+            localStorage.setItem('msg_trans_id',trans_id);
             window.location = "chat.html";      
          }
 
@@ -88,7 +89,7 @@
                                 '    <p style="margin: 1px;">Catatan Order: ' + returnData.catatan_pelanggan + '</p>' +
                                 '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                 '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
-                                '    <p style="margin: 1px;"><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button></p>' +
+                                '    <p style="margin: 1px;"><button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button></p>' +
                                 '</div>';  
                         }else if(returnData.status === 'PENJUAL_TERIMA_KERJA' || returnData.status === 'MENUNGGU_TANGGAPAN_PEMBELI'){
 
@@ -104,7 +105,7 @@
                                     '    <!--<p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>-->' +
                                     '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>&nbsp;&nbsp;' +
                                     '            <button type="button" class="btn btn-warning btn-xs" onClick="terima_biaya_ditawarkan(' + returnData.id +')">TERIMA BIAYA</button>&nbsp;&nbsp;' + 
                                     '            <button type="button" class="btn btn-danger btn-xs" onClick="tolak_biaya_ditawarkan(' + returnData.id +')">TOLAK BIAYA</button>' + 
                                     '   </p>' +
@@ -125,7 +126,7 @@
                                     '    <!--<p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                     '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>&nbsp;&nbsp;' +
                                     '            <button type="button" class="btn btn-warning btn-xs" onClick="bukti_bayar(' + returnData.id +')">KIRIM BUKTI BAYAR</button>' + 
                                     '   </p>' +
                                     '</div>';  
@@ -145,7 +146,7 @@
                                     '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                     '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>' + 
                                     '   </p>' +
                                     '</div>';  
                               
@@ -169,7 +170,7 @@
                               konten_trans_proses +=                                            
                                     '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>' + 
                                     '   </p>' +
                                     '</div>';  
                               
@@ -188,7 +189,7 @@
                                     '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                     '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>&nbsp;&nbsp;' +
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>&nbsp;&nbsp;' +
                                     '            <button type="button" class="btn btn-warning btn-xs" onClick="barang_diterima(' + returnData.id +')">BARANG DITERIMA</button>' + 
                                     '   </p>' +
                                     '</div>';  
@@ -208,7 +209,7 @@
                                     '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                     '    <!--<p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>-->' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>' + 
                                     '   </p>' +
                                     '</div>';  
                               
@@ -227,7 +228,7 @@
                                     '    <p style="margin: 1px;">Tanggal Proses: ' + returnData.tgl_diproses + '</p>' +
                                     '    <p style="margin: 1px;">Catatan Reparator: ' + returnData.catatan_penjual_jasa + '</p>' +    
                                     '    <p>' +
-                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +')">Kirim pesan</button>' + 
+                                    '            <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">Kirim pesan</button>' + 
                                     '   </p>' +
                                     '</div>';  
                               

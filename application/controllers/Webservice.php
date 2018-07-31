@@ -25,12 +25,15 @@ class Webservice extends CI_Controller
         $pengirim = $this->input->post('pengirim');
         $pesan    = $this->input->post('pesan');
 
+        $trans_id = $this->input->post('trans_id');
+
         $this->db->insert('percakapan',
             array(
                 'pesan'        => $pesan,
                 'pelanggan_id' => $pelanggan,
                 'penjual_id'   => $penjual,
                 'pengirim'     => $pengirim,
+                'trans_id'     => $trans_id
             )
         );
 
@@ -214,10 +217,12 @@ class Webservice extends CI_Controller
 
         $pelanggan   = $this->input->post('pelanggan');
         $penjual     = $this->input->post('penjual');
+        $trans_id    = $this->input->post('trans_id');
         $last_msg_id = $this->input->post('last_msg_id');
 
         $this->db->where('pelanggan_id', $pelanggan);
         $this->db->where('penjual_id', $penjual);
+        $this->db->where('trans_id', $trans_id);
         $this->db->where('id > ', $last_msg_id);
 
         $this->db->order_by("tgl", "ASC");
@@ -251,9 +256,11 @@ class Webservice extends CI_Controller
 
         $pelanggan = $this->input->post('pelanggan');
         $penjual   = $this->input->post('penjual');
+        $trans_id  = $this->input->post('trans_id');
 
         $this->db->where('pelanggan_id', $pelanggan);
         $this->db->where('penjual_id', $penjual);
+        $this->db->where('trans_id', $trans_id);
         $this->db->order_by("tgl", "ASC");
         $rs_kat = $this->db->get("percakapan");
 

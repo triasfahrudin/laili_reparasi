@@ -14,6 +14,7 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/red/pace-theme-loading-bar.min.css" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
       <style>
+         .full-width { display:block; }
          .pac-card {
             margin: 10px 10px 0 0;
             border-radius: 2px 0 0 2px;
@@ -241,14 +242,14 @@
          <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-              <!--  <div class="modal-header">
+               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Percakapan</h4>
-               </div> -->
-               <div class="modal-body">
+               </div>
+               <div class="modal-body" style="padding-top: 0px;padding-bottom: 0px">
                   <div class="container">
                      <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="padding-left: 0px;">
                            <div class="panel panel-primary">
                               <div class="panel-heading" id="accordion">
                                  <span class="glyphicon glyphicon-comment"></span> Chat
@@ -261,7 +262,7 @@
                               <div class="panel-collapse collapse in" id="collapseOne">
                                  <div class="panel-body">
                                     <ul class="chat">
-                                       <li class="left clearfix">
+                                       <!-- <li class="left clearfix">
                                           <span class="chat-img pull-left">
                                           <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
                                           </span>
@@ -320,10 +321,10 @@
                                                 dolor, quis ullamcorper ligula sodales.
                                              </p>
                                           </div>
-                                       </li>
+                                       </li> -->
                                     </ul>
                                  </div>
-                                 <div class="panel-footer">
+                                 <!-- <div class="panel-footer">
                                     <div class="input-group">
                                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
                                        <span class="input-group-btn">
@@ -331,7 +332,7 @@
                                        Send</button>
                                        </span>
                                     </div>
-                                 </div>
+                                 </div> -->
                               </div>
                            </div>
                         </div>
@@ -502,6 +503,55 @@
 
           }
 
+
+
+          function lihat_percakapan(transaksi_id){
+
+               $.post("<?php echo site_url('admin/lihat_percakapan')?>",{
+                  transaksi_id : transaksi_id
+               },'json').done(function(data){
+
+                  $('.chat').html("");
+                  $.each(data, function (index, returnData) {
+                     
+                     var konten = "";
+                     if(returnData.pengirim === 'pelanggan'){
+                        konten = '<li class="left clearfix">' +
+                                 '   <span class="chat-img pull-left">' +
+                                 '   <img src="http://placehold.it/50/55C1E7/fff&text=P" alt="User Avatar" class="img-circle" />' +
+                                 '   </span>' +
+                                 '   <div class="chat-body clearfix">' +
+                                 '      <div class="header">' +
+                                 '         <strong class="primary-font">Pelanggan</strong> <small class="pull-right text-muted">' +
+                                 '         <span class="glyphicon glyphicon-time"></span>' + returnData.tgl +'</small>' +
+                                 '      </div>' +
+                                 '      <p>' + returnData.pesan + '</p>' +
+                                 '   </div>' +
+                                 '</li>';
+                     }else{
+                        konten = '<li class="right clearfix">' +
+                                 '   <span class="chat-img pull-right">' +
+                                 '   <img src="http://placehold.it/50/FA6F57/fff&text=PJ" alt="User Avatar" class="img-circle" />' +
+                                 '   </span>' +
+                                 '   <div class="chat-body clearfix">' +
+                                 '      <div class="header">' +
+                                 '         <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>' + returnData.tgl +'</small>' +
+                                 '         <strong class="pull-right primary-font">Penyedia Jasa</strong>' +
+                                 '      </div>' +
+                                 '      <p>' + returnData.pesan + '</p>' +
+                                 '   </div>' +
+                                 '</li>';
+                     }
+
+                     $('.chat').append(konten);
+
+                     
+                  });
+
+                  $('#modalPercakapan').modal();    
+               })
+               
+          }
 
           function validasi_pembayaran(transaksi_id){
             

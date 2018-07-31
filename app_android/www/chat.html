@@ -273,6 +273,7 @@
 		            		$.post(rootWebService + "/kirim_pesan", {
 					            pelanggan  : localStorage.getItem('user_id'),
 					            penjual    : localStorage.getItem('msg_penjual_id'),
+					            trans_id   : localStorage.getItem('msg_trans_id'),
 					            pesan      : msg,
 					            pengirim   : 'pelanggan'
 					        }, 'json')
@@ -285,6 +286,7 @@
 		            		$.post(rootWebService + "/kirim_pesan", {
 					            pelanggan  : localStorage.getItem('msg_pelanggan_id'),
 					            penjual    : localStorage.getItem('user_id'),
+					            trans_id   : localStorage.getItem('msg_trans_id'),
 					            pesan      : msg,
 					            pengirim   : 'penjual'
 					        }, 'json')
@@ -311,6 +313,7 @@
 			        	$.post(rootWebService + "/pesan_belum_terbaca", {
 				            pelanggan  : localStorage.getItem('user_id'),
 				            penjual    : localStorage.getItem('msg_penjual_id'),
+				            trans_id   : localStorage.getItem('msg_trans_id'),
 				            last_msg_id : LastMsgId
 				        }, 'json')
 				        .done(function (data) {
@@ -334,6 +337,7 @@
 			        	$.post(rootWebService + "/pesan_belum_terbaca", {
 				            pelanggan  : localStorage.getItem('msg_pelanggan_id'),
 				            penjual    : localStorage.getItem('user_id'),
+				            trans_id   : localStorage.getItem('msg_trans_id'),
 				            last_msg_id : LastMsgId
 				        }, 'json')
 				        .done(function (data) {
@@ -361,7 +365,8 @@
 
 		        	$.post(rootWebService + "/pesan_tersimpan", {
 			            pelanggan  : localStorage.getItem('user_id'),
-			            penjual    : localStorage.getItem('msg_penjual_id')
+			            penjual    : localStorage.getItem('msg_penjual_id'),
+			            trans_id   : localStorage.getItem('msg_trans_id')
 			        }, 'json')
 			        .done(function (data) {
 
@@ -388,7 +393,8 @@
             		
            			$.post(rootWebService + "/pesan_tersimpan", {
 			            pelanggan  : localStorage.getItem('msg_pelanggan_id'),
-			            penjual    : localStorage.getItem('user_id')
+			            penjual    : localStorage.getItem('user_id'),
+			            trans_id   : localStorage.getItem('msg_trans_id')
 			        }, 'json')
 			        .done(function (data) {
 

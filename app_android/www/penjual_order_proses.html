@@ -23,8 +23,9 @@
             window.location = "map_route_pelanggan.html";    
          }
 
-         function msg(pelanggan_id){
+         function msg(pelanggan_id,trans_id){
             localStorage.setItem('msg_pelanggan_id',pelanggan_id);
+            localStorage.setItem('msg_trans_id',trans_id);
             window.location = "chat.html";      
          }
 
@@ -72,7 +73,7 @@
                               '    <p>Catatan Order : ' + returnData.catatan_order + '</p>' +
                               '    <p>Tanggal Order : ' + returnData.tanggal_order + '</p>' +
                               '    <p><button type="button" class="btn btn-primary btn-xs" onClick="goto_route(' + returnData.pelanggan_id + ')">LOKASI</button>&nbsp;&nbsp;' +
-                              '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.pelanggan_id +')">KIRIM PESAN</button>&nbsp;&nbsp;' +
+                              '       <button type="button" class="btn btn-success btn-xs" onClick="msg(' + returnData.id_penjual_jasa +',' + returnData.id + ')">KIRIM PESAN</button>&nbsp;&nbsp;' +
                               '       <button type="button" class="btn btn-danger btn-xs" onClick="selesai(' + returnData.id +')">SELESAI</button>' + 
                               '    </p>' +
                               '</div>';
