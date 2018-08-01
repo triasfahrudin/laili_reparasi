@@ -11,6 +11,12 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
+-- Dumping database structure for laili_reparasi
+DROP DATABASE IF EXISTS `laili_reparasi`;
+CREATE DATABASE IF NOT EXISTS `laili_reparasi` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `laili_reparasi`;
+
 -- Dumping structure for table laili_reparasi.ci_sessions
 DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE IF NOT EXISTS `ci_sessions` (
@@ -22,11 +28,13 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
   KEY `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.ci_sessions: ~1 rows (approximately)
+-- Dumping data for table laili_reparasi.ci_sessions: ~3 rows (approximately)
 DELETE FROM `ci_sessions`;
 /*!40000 ALTER TABLE `ci_sessions` DISABLE KEYS */;
 INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-	('a6u001qs4e9k5b5t3rvt55ej4qm62kpt', '127.0.0.1', 1531583820, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533313535353632333B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B);
+	('4ll8344bgqeur17262qs7n0og66fi2uh', '127.0.0.1', 1533101318, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533333033363435303B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
+	('a6u001qs4e9k5b5t3rvt55ej4qm62kpt', '127.0.0.1', 1531615356, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533313535353632333B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B),
+	('rt6ujmfpphjctf2hh9o5jd9j72jkkgsq', '127.0.0.1', 1532486727, _binary 0x5F5F63695F6C6173745F726567656E65726174657C693A313533323438363532333B757365725F69647C733A313A2231223B757365725F656D61696C7C733A31353A2261646D696E40676D61696C2E636F6D223B757365725F6E616D615F6C656E676B61707C733A353A2261646D696E223B);
 /*!40000 ALTER TABLE `ci_sessions` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.dompetku
@@ -7716,7 +7724,7 @@ CREATE TABLE IF NOT EXISTS `kelurahan` (
   PRIMARY KEY (`id_kel`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.kelurahan: ~82,579 rows (approximately)
+-- Dumping data for table laili_reparasi.kelurahan: ~82,505 rows (approximately)
 DELETE FROM `kelurahan`;
 /*!40000 ALTER TABLE `kelurahan` DISABLE KEYS */;
 INSERT INTO `kelurahan` (`id_kel`, `id_kec`, `nama`, `id_jenis`) VALUES
@@ -90288,7 +90296,7 @@ DELETE FROM `penjual_jasa`;
 /*!40000 ALTER TABLE `penjual_jasa` DISABLE KEYS */;
 INSERT INTO `penjual_jasa` (`id`, `nama`, `email`, `password`, `kategori_jasa`, `provinsi`, `kabupaten`, `kecamatan`, `kelurahan`, `alamat`, `telp`, `bank`, `rekening_bank`, `foto`, `latitude`, `longitude`, `map`, `verifikasi`, `tgl_daftar`, `token_reset_password`, `device_id`) VALUES
 	(3, 'CV. Elektronik Sejahtera', 'sitiwulandari5678@gmail.com', '39d6fb20d65294dc0e1783576a19a0cb', '1,2,3,4,5', '', '', '', '', '<p>-</p>', '-', 'BRI', '123456789', '', '-8.341649810100314', '114.30813743217004', '', 'SUDAH', '0000-00-00 00:00:00', '817659', 'undefined'),
-	(4, 'CV. Indah electro', 'bwi@gmail.com', 'e85af1c39ac265ad6d03762cb8d59ccd', '2,5', '', '', '', '', '<p>-</p>', '-', 'BCA', '987654321', '', '-8.240252802299779', '114.35531179999998', '', 'BELUM', '2018-02-27 09:01:17', '', NULL);
+	(4, 'CV. Indah electro', 'bwi@gmail.com', 'e85af1c39ac265ad6d03762cb8d59ccd', '2', '', '', '', '', '<p>-</p>', '-', 'BCA', '987654321', '', '-8.240252802299779', '114.35531179999998', '', 'BELUM', '2018-02-27 09:01:17', '', NULL);
 /*!40000 ALTER TABLE `penjual_jasa` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.percakapan
@@ -90301,12 +90309,22 @@ CREATE TABLE IF NOT EXISTS `percakapan` (
   `pelanggan_id` int(11) NOT NULL,
   `penjual_id` int(11) NOT NULL,
   `pengirim` enum('pelanggan','penjual') NOT NULL,
+  `trans_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.percakapan: ~0 rows (approximately)
+-- Dumping data for table laili_reparasi.percakapan: ~8 rows (approximately)
 DELETE FROM `percakapan`;
 /*!40000 ALTER TABLE `percakapan` DISABLE KEYS */;
+INSERT INTO `percakapan` (`id`, `tgl`, `pesan`, `foto`, `pelanggan_id`, `penjual_id`, `pengirim`, `trans_id`) VALUES
+	(1, '2018-07-31 18:14:58', 'test', '', 1, 3, 'pelanggan', 0),
+	(2, '2018-07-31 18:15:01', 'test', '', 1, 3, 'pelanggan', 0),
+	(3, '2018-07-31 18:29:56', 'wawa', '', 1, 3, 'pelanggan', 0),
+	(4, '2018-07-31 19:10:49', 'test chat trans', '', 1, 3, 'pelanggan', 1),
+	(5, '2018-07-31 20:25:44', 'kenapa transaksi saya di batalkan ?', '', 1, 3, 'pelanggan', 2),
+	(6, '2018-07-31 20:27:38', 'test ajah', '', 1, 3, 'penjual', 2),
+	(7, '2018-07-31 19:12:06', 'lala', '', 1, 4, 'pelanggan', 0),
+	(8, '2018-07-31 20:31:47', 'lolita', '', 1, 3, 'pelanggan', 2);
 /*!40000 ALTER TABLE `percakapan` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.provinsi
@@ -90384,7 +90402,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table laili_reparasi.settings: ~0 rows (approximately)
+-- Dumping data for table laili_reparasi.settings: ~2 rows (approximately)
 DELETE FROM `settings`;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`id`, `title`, `tipe`, `value`) VALUES
@@ -90412,11 +90430,14 @@ CREATE TABLE IF NOT EXISTS `transaksi` (
   `catatan_rating` text NOT NULL,
   `catatan_penjual_jasa` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='catatan_pelanggan    => berisi tentang catatan pelanggan tentang kondisi barangnya, kerusakannya, hal-hal yang bisa digunakan penjual jasa untuk perkiraan kerusakan\r\ncatatan_penjual_jasa => berisi tentang catatan penjual jasa tentang kerusakan barang setelah melihat langsung. ';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='catatan_pelanggan    => berisi tentang catatan pelanggan tentang kondisi barangnya, kerusakannya, hal-hal yang bisa digunakan penjual jasa untuk perkiraan kerusakan\r\ncatatan_penjual_jasa => berisi tentang catatan penjual jasa tentang kerusakan barang setelah melihat langsung. ';
 
--- Dumping data for table laili_reparasi.transaksi: ~0 rows (approximately)
+-- Dumping data for table laili_reparasi.transaksi: ~2 rows (approximately)
 DELETE FROM `transaksi`;
 /*!40000 ALTER TABLE `transaksi` DISABLE KEYS */;
+INSERT INTO `transaksi` (`id`, `pelanggan_id`, `penjual_jasa_id`, `kategori_jasa_id`, `status`, `biaya_disepakati`, `tgl_transaksi`, `tgl_diproses`, `tgl_selesai`, `bukti_bayar`, `verifikasi_bukti_bayar`, `catatan_verifikasi`, `catatan_pelanggan`, `rating_pelanggan`, `catatan_rating`, `catatan_penjual_jasa`) VALUES
+	(1, 1, 3, 1, 'PELANGGAN_SETUJU_BIAYA', 500000, '2018-07-25 09:44:09', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 'PENDING', '', '', 0, '', ''),
+	(2, 1, 3, 5, 'PELANGGAN_TOLAK_BIAYA', 0, '2018-07-29 11:55:29', '0000-00-00 00:00:00', '2018-07-31 18:35:59', '', 'PENDING', '', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx fffffffffff', 0, '', '');
 /*!40000 ALTER TABLE `transaksi` ENABLE KEYS */;
 
 -- Dumping structure for table laili_reparasi.user
