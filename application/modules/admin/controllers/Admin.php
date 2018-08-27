@@ -242,7 +242,7 @@ class Admin extends CI_Controller
 
             $crud->set_relation('penjual_jasa_id', 'penjual_jasa', 'nama');
 
-            $crud->display_as('penjual_jasa_id', 'Penjual Jasa');
+            $crud->display_as('penjual_jasa_id', 'Penyedia Jasa');
 
             $crud->unset_add();
             $crud->unset_edit();
@@ -267,7 +267,7 @@ class Admin extends CI_Controller
 
             $crud->set_table('transaksi');
             $crud->where('penjual_jasa_id', $penjual_jasa_id);
-            $crud->set_subject('Data transaksi penjual jasa');
+            $crud->set_subject('Data transaksi Penyedia jasa');
 
             $crud->columns('tgl_transaksi', 'pelanggan_id', 'status', 'biaya_disepakati');
 
@@ -291,7 +291,7 @@ class Admin extends CI_Controller
             });
 
             $this->breadcrumbs->push('Dashboard', '/admin');
-            $this->breadcrumbs->push('Data Penjual Jasa', '/admin/penjual_jasa');
+            $this->breadcrumbs->push('Data Penyedia Jasa', '/admin/penjual_jasa');
             $this->breadcrumbs->push('Data Transaksi ' . get_val('penjual_jasa', $penjual_jasa_id, 'nama'), '/admin/transaksi_penjual_jasa/' . $penjual_jasa_id);
 
             $state = $crud->getState();
@@ -309,7 +309,7 @@ class Admin extends CI_Controller
             $crud->unset_edit();
             $crud->unset_delete();
 
-            $extra  = array('page_title' => 'Data Transaksi Penjual jasa');
+            $extra  = array('page_title' => 'Data Transaksi Penyedia jasa');
             $output = $crud->render();
 
             $output = array_merge((array) $output, $extra);
@@ -467,7 +467,7 @@ class Admin extends CI_Controller
             $crud = new Grocery_CRUD();
 
             $crud->set_table('penjual_jasa');
-            $crud->set_subject('Data Penjual Jasa');
+            $crud->set_subject('Data Penyedia Jasa');
 
             $crud->columns('nama', 'email', 'kategori_jasa', 'telp', 'transaksi', 'tgl_daftar');
 
@@ -490,7 +490,7 @@ class Admin extends CI_Controller
             $crud->required_fields('nama', 'email', 'alamat', 'telp');
 
             $this->breadcrumbs->push('Dashboard', '/admin');
-            $this->breadcrumbs->push('Data Penjual jasa', '/admin/penjual-jasa');
+            $this->breadcrumbs->push('Data Penyedia jasa', '/admin/penjual-jasa');
 
             $state = $crud->getState();
 
@@ -671,7 +671,7 @@ class Admin extends CI_Controller
 
             });
 
-            $crud->display_as('penjual_jasa_id', 'Penjual Jasa');
+            $crud->display_as('penjual_jasa_id', 'Penyedia Jasa');
 
             $this->breadcrumbs->push('Dashboard', '/admin');
             $this->breadcrumbs->push('Penarikan Dana', '/admin/penarikan_dana');
@@ -789,7 +789,7 @@ class Admin extends CI_Controller
             });
 
             $crud->display_as('pelanggan_id', 'Pelanggan');
-            $crud->display_as('penjual_jasa_id', 'Penjual Jasa');
+            $crud->display_as('penjual_jasa_id', 'Penyedia Jasa');
 
             $this->breadcrumbs->push('Dashboard', '/admin');
             $this->breadcrumbs->push('Data Transaksi', '/admin/transaksi');

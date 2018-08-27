@@ -13,7 +13,7 @@
     <div class="col-lg-3" style="text-align: center;">
       <a href="<?php echo site_url('admin/penjual-jasa')?>" class="thumbnail text-warning"">
         <i class="fa fa-file-o" style="font-size: 80px; margin: 10px 0"></i><br>
-        <h4 class="">(<label id="jml_penjual_jasa">0</label>) Penjual Jasa</h4>
+        <h4 class="">(<label id="jml_penjual_jasa">0</label>) Penyedia Jasa</h4>
       </a>      
     </div>
 

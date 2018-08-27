@@ -215,7 +215,7 @@
                            <li><a href="<?php echo site_url('admin/user')?>"><span class="glyphicon glyphicon-list-alt"></span> Admin</a></li>
                            <li><a href="<?php echo site_url('admin/kategori_jasa')?>"><span class="glyphicon glyphicon-list-alt"></span> Kategori Jasa</a></li>
                            <li><a href="<?php echo site_url('admin/pelanggan')?>"><span class="glyphicon glyphicon-list-alt"></span> Pelanggan</a></li>
-                           <li><a href="<?php echo site_url('admin/penjual_jasa')?>"><span class="glyphicon glyphicon-list-alt"></span> Penjual Jasa</a></li>
+                           <li><a href="<?php echo site_url('admin/penjual_jasa')?>"><span class="glyphicon glyphicon-list-alt"></span> Penyedia Jasa</a></li>
                            <li><a href="<?php echo site_url('admin/transaksi')?>"><span class="glyphicon glyphicon-list-alt"></span> Transaksi</a></li>
                            <li><a href="<?php echo site_url('admin/penarikan_dana')?>"><span class="glyphicon glyphicon-list-alt"></span> Penarikan Dana</a></li>
                            <li><a href="<?php echo site_url('admin/web_settings')?>"><span class="glyphicon glyphicon-wrench"></span> Web Settings</a></li>
