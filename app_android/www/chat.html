@@ -218,7 +218,7 @@
     <script type="text/javascript">
     	(function () {
 		    var Message;
-		    var LastMsgId;
+		    var LastMsgId = 0;
 
 		    Message = function (arg) {
 		        this.text = arg.text, this.message_side = arg.message_side;
@@ -295,7 +295,9 @@
 					        });	
 
 
-		            	}	        	
+		            	}	    
+
+		            	// retrieveMessages();    	
 
 		                
 		            }
@@ -304,9 +306,9 @@
 		        //load all msg
 		        //then check new message
 
-		        retrieveMessages = function(){
+		        var user_level = localStorage.getItem('user_level');
 
-		        	var user_level = localStorage.getItem('user_level');
+		        retrieveMessages = function(){		        	
 
 		        	if(user_level === 'pelanggan'){
 
@@ -361,7 +363,7 @@
 
 		        }
 
-		        if(localStorage.getItem('user_level') === 'pelanggan'){
+		        if(user_level === 'pelanggan'){
 
 		        	$.post(rootWebService + "/pesan_tersimpan", {
 			            pelanggan  : localStorage.getItem('user_id'),
@@ -382,9 +384,9 @@
 
 			            });
 
-			            setInterval(function() {
-					        retrieveMessages();
-					    }, 5000);
+			      //       setInterval(function() {
+					    //     retrieveMessages();
+					    // }, 5000);
 					    
 
 			        });	
@@ -410,14 +412,20 @@
 
 			            });
 
-			            setInterval(function() {
-					        retrieveMessages();
-					    }, 5000);
+			      //       setInterval(function() {
+					    //     retrieveMessages();
+					    // }, 5000);
 					    
 
 			        });	
 			        
-            	}		        
+            	}
+
+
+            	 setInterval(function() {
+			        retrieveMessages();
+			     }, 5000);
+					    		        
 		        
 		    });
 
